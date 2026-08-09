@@ -19,10 +19,10 @@ export function CollectionBrowser({ products, categories, attributes, basePath, 
   const [sortOpen, setSortOpen] = useState(false);
   const [columns, setColumns] = useState(4);
   const visibleCategories = categories.filter((item) => item.count > 0).sort((a, b) => b.count - a.count);
-  const activeCount = ["on_sale", "min_price", "max_price", "color", "qty", "variant"].filter((key) => activeQuery[key]).length;
+  const activeCount = ["stock_status", "on_sale", "min_price", "max_price", "color", "qty", "variant"].filter((key) => activeQuery[key]).length;
 
   function toggleHref(key, value) {
-    return withQuery(basePath, activeQuery, { [key]: activeQuery[key] === value ? null : value });
+    return withQuery(basePath, activeQuery, { [key]: activeQuery[key] === value ? null : value, page: null });
   }
 
   function priceHref(min, max) {
@@ -30,6 +30,7 @@ export function CollectionBrowser({ products, categories, attributes, basePath, 
     return withQuery(basePath, activeQuery, {
       min_price: selected ? null : min,
       max_price: selected ? null : max,
+      page: null,
     });
   }
 
@@ -45,7 +46,7 @@ export function CollectionBrowser({ products, categories, attributes, basePath, 
       </details>
       <details>
         <summary>Availability <ChevronDown size={15} /></summary>
-        <Link href={basePath}><span className="filter-check"><Check size={11} /></span><span>In stock</span></Link>
+        <Link href={toggleHref("stock_status", "instock")}><span className="filter-check">{activeQuery.stock_status === "instock" ? <Check size={11} /> : null}</span><span>In stock</span></Link>
         <Link href={toggleHref("on_sale", "true")}><span className="filter-check">{activeQuery.on_sale === "true" ? <Check size={11} /> : null}</span><span>On sale</span></Link>
       </details>
       <details>
@@ -76,7 +77,7 @@ export function CollectionBrowser({ products, categories, attributes, basePath, 
       <div className="collection-toolbar">
         <div className="toolbar-left">
           <button type="button" onClick={() => setFiltersOpen(true)}><SlidersHorizontal size={16} /> Filters {activeCount ? `(${activeCount})` : ""}</button>
-          <div className={`sort-menu ${sortOpen ? "open" : ""}`}><button type="button" aria-expanded={sortOpen} onClick={() => setSortOpen(!sortOpen)}>Sort by <ChevronDown size={14} /></button><div><Link onClick={() => setSortOpen(false)} href={withQuery(basePath, activeQuery, { orderby: "date" })}>Newest</Link><Link onClick={() => setSortOpen(false)} href={withQuery(basePath, activeQuery, { orderby: "popularity" })}>Popularity</Link><Link onClick={() => setSortOpen(false)} href={withQuery(basePath, activeQuery, { orderby: "price" })}>Price low to high</Link><Link onClick={() => setSortOpen(false)} href={withQuery(basePath, activeQuery, { orderby: "rating" })}>Top rated</Link></div></div>
+          <div className={`sort-menu ${sortOpen ? "open" : ""}`}><button type="button" aria-expanded={sortOpen} onClick={() => setSortOpen(!sortOpen)}>Sort by <ChevronDown size={14} /></button><div><Link onClick={() => setSortOpen(false)} href={withQuery(basePath, activeQuery, { orderby: "date", order: "desc", page: null })}>Newest</Link><Link onClick={() => setSortOpen(false)} href={withQuery(basePath, activeQuery, { orderby: "popularity", order: "desc", page: null })}>Popularity</Link><Link onClick={() => setSortOpen(false)} href={withQuery(basePath, activeQuery, { orderby: "price", order: "asc", page: null })}>Price low to high</Link><Link onClick={() => setSortOpen(false)} href={withQuery(basePath, activeQuery, { orderby: "rating", order: "desc", page: null })}>Top rated</Link></div></div>
         </div>
         <span className="toolbar-count">{products.length} Products</span>
         <div className="grid-switcher" aria-label="Grid density">
