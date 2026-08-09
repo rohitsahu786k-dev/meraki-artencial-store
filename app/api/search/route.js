@@ -1,27 +1,29 @@
 import { NextResponse } from "next/server";
-import { WP_URL } from "@/lib/wp";
-
-function localUrl(url = "") {
-  try {
-    const parsed = new URL(url);
-    const parts = parsed.pathname.split("/").filter(Boolean);
-    if (parts[0] === "product") return `/product/${parts.at(-1)}`;
-    if (parts[0] === "product-category") return `/category/${parts.at(-1)}`;
-    return url;
-  } catch {
-    return url;
-  }
-}
+import { getCategories, getProducts } from "@/lib/wp";
 
 export async function GET(request) {
   const query = new URL(request.url).searchParams.get("q")?.trim() || "";
   if (query.length < 2) return NextResponse.json({ suggestions: [] });
-  const response = await fetch(`${WP_URL}/?wc-ajax=dgwt_wcas_ajax_search&s=${encodeURIComponent(query)}`, { cache: "no-store" });
-  if (!response.ok) return NextResponse.json({ suggestions: [] });
-  const data = await response.json();
-  const suggestions = (data.suggestions || [])
-    .filter((item) => item.type === "product" || item.type === "taxonomy")
-    .slice(0, 8)
-    .map((item) => ({ id: item.post_id || item.term_id, label: item.value, type: item.type, href: localUrl(item.url) }));
-  return NextResponse.json({ suggestions });
+
+  const [products, categories] = await Promise.all([
+    getProducts({ search: query, per_page: "6", orderby: "relevance" }).catch(() => []),
+    getCategories({ search: query, per_page: "6", hide_empty: "true" }).catch(() => []),
+  ]);
+
+  const productSuggestions = products.map((product) => ({
+    id: product.id,
+    label: product.name,
+    type: "product",
+    href: `/product/${product.slug}`,
+    image: product.images?.[0]?.thumbnail || product.images?.[0]?.src || "",
+  }));
+  const categorySuggestions = categories.map((category) => ({
+    id: category.id,
+    label: category.name,
+    type: "category",
+    href: `/category/${category.slug}`,
+    image: category.image?.thumbnail || category.image?.src || "",
+  }));
+
+  return NextResponse.json({ suggestions: [...productSuggestions, ...categorySuggestions].slice(0, 10) });
 }
