@@ -1,26 +1,51 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, Menu, Search, X } from "lucide-react";
+import { ChevronDown, ChevronRight, Heart, HelpCircle, LogIn, Menu, MessageCircle, Offer, Package, Search, ShoppingBag, Sparkles, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export function HeaderTools({ menu, categories }) {
+const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "917426915251";
+
+export function HeaderTools({ menu = [], categories = [] }) {
   const [panel, setPanel] = useState(null);
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [openCategory, setOpenCategory] = useState(true);
+  const [expandedParents, setExpandedParents] = useState({});
 
   useEffect(() => {
     const openSearch = () => setPanel("search");
     const openMenu = () => setPanel("menu");
     window.addEventListener("meraki:search-open", openSearch);
     window.addEventListener("meraki:menu-open", openMenu);
-    return () => { window.removeEventListener("meraki:search-open", openSearch); window.removeEventListener("meraki:menu-open", openMenu); };
+    return () => {
+      window.removeEventListener("meraki:search-open", openSearch);
+      window.removeEventListener("meraki:menu-open", openMenu);
+    };
   }, []);
 
   useEffect(() => {
+    if (!panel) return undefined;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const handleKey = (e) => {
+      if (e.key === "Escape") setPanel(null);
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", handleKey);
+    };
+  }, [panel]);
+
+  useEffect(() => {
     const clean = query.trim();
-    if (clean.length < 2) { setSuggestions([]); setLoading(false); return undefined; }
+    if (clean.length < 2) {
+      setSuggestions([]);
+      setLoading(false);
+      return undefined;
+    }
     const controller = new AbortController();
     const timer = window.setTimeout(async () => {
       setLoading(true);
@@ -29,37 +54,183 @@ export function HeaderTools({ menu, categories }) {
       else setSuggestions([]);
       setLoading(false);
     }, 180);
-    return () => { window.clearTimeout(timer); controller.abort(); };
+    return () => {
+      window.clearTimeout(timer);
+      controller.abort();
+    };
   }, [query]);
 
+  const toggleParent = (id) => {
+    setExpandedParents((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
   const roots = menu.filter((item) => !item.parent);
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Hi Meraki Artencial Store, I need assistance with an order.")}`;
 
   return (
     <>
       <div className="header-utilities">
-        <button type="button" onClick={() => setPanel("menu")}><Menu size={15} /><span>Menu</span></button>
-        <button type="button" onClick={() => setPanel("search")}><Search size={15} /><span>Search</span></button>
+        <button type="button" onClick={() => setPanel("menu")} aria-label="Open Navigation Menu">
+          <Menu size={16} />
+          <span>Menu</span>
+        </button>
+        <button type="button" onClick={() => setPanel("search")} aria-label="Search Catalog">
+          <Search size={16} />
+          <span>Search</span>
+        </button>
       </div>
+
       {panel ? (
         <div className="header-panel-backdrop" onClick={() => setPanel(null)}>
-          <aside className="header-panel" onClick={(event) => event.stopPropagation()}>
-            <div className="header-panel-title"><strong>{panel === "search" ? "Search products" : "Menu"}</strong><button type="button" onClick={() => setPanel(null)} aria-label="Close panel"><X size={19} /></button></div>
+          <aside
+            className={`header-panel myntra-sidebar-panel ${panel === "menu" ? "myntra-style-menu" : "search-panel"}`}
+            onClick={(event) => event.stopPropagation()}
+          >
             {panel === "search" ? (
-              <div className="live-search">
-                <form action="/shop"><input autoFocus name="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search products, categories..." autoComplete="off" /><button aria-label="Submit search"><Search size={18} /></button></form>
-                <div className="search-results">
-                  {loading ? <p>Searching WooCommerce...</p> : null}
-                  {!loading && suggestions.map((item) => <Link href={item.href} key={`${item.type}-${item.id}`} onClick={() => setPanel(null)}><span><small>{item.type === "product" ? "Product" : "Category"}</small>{item.label}</span><ChevronRight size={16} /></Link>)}
-                  {!loading && query.trim().length >= 2 && !suggestions.length ? <p>No instant matches. Press enter to search the full catalog.</p> : null}
+              <div className="live-search-wrapper">
+                <div className="header-panel-title">
+                  <strong>Search Store</strong>
+                  <button type="button" className="close-panel-btn" onClick={() => setPanel(null)} aria-label="Close search">
+                    <X size={20} />
+                  </button>
+                </div>
+                <div className="live-search">
+                  <form action="/shop" onSubmit={() => setPanel(null)}>
+                    <input
+                      autoFocus
+                      name="search"
+                      value={query}
+                      onChange={(event) => setQuery(event.target.value)}
+                      placeholder="Search products, resin art, dried flowers..."
+                      autoComplete="off"
+                    />
+                    <button aria-label="Submit search" type="submit">
+                      <Search size={18} />
+                    </button>
+                  </form>
+                  {categories.length > 0 && !query && (
+                    <div className="search-quick-pills">
+                      <span>Popular:</span>
+                      {categories.slice(0, 5).map((cat) => (
+                        <Link key={cat.id} href={`/category/${cat.slug}`} onClick={() => setPanel(null)}>
+                          {cat.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                  <div className="search-results">
+                    {loading ? <p className="search-loading">Searching WooCommerce inventory...</p> : null}
+                    {!loading && suggestions.map((item) => (
+                      <Link href={item.href} key={`${item.type}-${item.id}`} onClick={() => setPanel(null)}>
+                        <span>
+                          <small>{item.type === "product" ? "Product" : "Category"}</small>
+                          {item.label}
+                        </span>
+                        <ChevronRight size={16} />
+                      </Link>
+                    ))}
+                    {!loading && query.trim().length >= 2 && !suggestions.length ? (
+                      <p className="search-empty">No instant matches found. Press enter to search full shop catalog.</p>
+                    ) : null}
+                  </div>
                 </div>
               </div>
             ) : (
-              <nav className="drawer-menu">
-                {roots.map((item) => (
-                  <div key={item.id}><Link href={item.href} onClick={() => setPanel(null)}>{item.label}<ChevronRight size={15} /></Link>{menu.filter((child) => child.parent === item.id).slice(0, 12).map((child) => <Link className="drawer-submenu" href={child.href} key={child.id} onClick={() => setPanel(null)}>{child.label}</Link>)}</div>
-                ))}
-                <div className="drawer-category-grid">{categories.slice(0, 10).map((category) => <Link href={`/category/${category.slug}`} key={category.id} onClick={() => setPanel(null)}>{category.name}</Link>)}</div>
-              </nav>
+              <div className="myntra-menu-container">
+                {/* Myntra style User Banner Header */}
+                <div className="myntra-user-banner">
+                  <div className="user-avatar">
+                    <User size={22} />
+                  </div>
+                  <div className="user-greeting">
+                    <h3>Welcome Guest</h3>
+                    <p>To access orders, wishlist & offers</p>
+                  </div>
+                  <Link href="/account" onClick={() => setPanel(null)} className="myntra-login-btn">
+                    Sign In / Join <LogIn size={13} />
+                  </Link>
+                  <button type="button" className="myntra-close-btn" onClick={() => setPanel(null)} aria-label="Close menu">
+                    <X size={20} />
+                  </button>
+                </div>
+
+                <nav className="myntra-menu-nav">
+                  {/* Category Section Accordion */}
+                  <div className="myntra-nav-section">
+                    <div className="myntra-section-header" onClick={() => setOpenCategory(!openCategory)}>
+                      <span>Shop by Category</span>
+                      <ChevronDown size={16} className={`chevron-icon ${openCategory ? "open" : ""}`} />
+                    </div>
+                    {openCategory && (
+                      <div className="myntra-category-list">
+                        {categories.slice(0, 16).map((category) => (
+                          <Link href={`/category/${category.slug}`} key={category.id} onClick={() => setPanel(null)} className="myntra-cat-link">
+                            <span className="cat-name">{category.name}</span>
+                            {category.count > 0 && <span className="cat-count">{category.count}</span>}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* WordPress Primary Menu roots */}
+                  <div className="myntra-nav-section">
+                    <span className="myntra-section-title">Navigation</span>
+                    {roots.map((item) => {
+                      const children = menu.filter((child) => child.parent === item.id);
+                      const isExpanded = expandedParents[item.id];
+                      return (
+                        <div key={item.id} className="myntra-menu-item-group">
+                          <div className="myntra-menu-row">
+                            <Link href={item.href} onClick={() => setPanel(null)} className="myntra-main-link">
+                              {item.label}
+                            </Link>
+                            {children.length > 0 && (
+                              <button type="button" className="sub-toggle-btn" onClick={() => toggleParent(item.id)}>
+                                <ChevronDown size={14} className={`chevron-icon ${isExpanded ? "open" : ""}`} />
+                              </button>
+                            )}
+                          </div>
+                          {children.length > 0 && isExpanded && (
+                            <div className="myntra-sub-list">
+                              {children.map((child) => (
+                                <Link href={child.href} key={child.id} onClick={() => setPanel(null)}>
+                                  {child.label}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Quick Services & Support */}
+                  <div className="myntra-nav-section quick-services">
+                    <span className="myntra-section-title">Quick Links</span>
+                    <Link href="/shop?on_sale=true" onClick={() => setPanel(null)} className="quick-service-link highlight">
+                      <Sparkles size={16} /> <span>Special Offers & Deals</span>
+                    </Link>
+                    <Link href="/wishlist" onClick={() => setPanel(null)} className="quick-service-link">
+                      <Heart size={16} /> <span>Saved Wishlist</span>
+                    </Link>
+                    <Link href="/account" onClick={() => setPanel(null)} className="quick-service-link">
+                      <Package size={16} /> <span>Orders & Account</span>
+                    </Link>
+                    <a href={whatsappUrl} target="_blank" rel="noreferrer" className="quick-service-link whatsapp">
+                      <MessageCircle size={16} /> <span>WhatsApp Support</span>
+                    </a>
+                    <Link href="/contact" onClick={() => setPanel(null)} className="quick-service-link">
+                      <HelpCircle size={16} /> <span>Contact & FAQs</span>
+                    </Link>
+                  </div>
+                </nav>
+
+                <div className="myntra-footer-credit">
+                  <p>Meraki Artencial Store</p>
+                  <small>Handcrafted in Udaipur, India</small>
+                </div>
+              </div>
             )}
           </aside>
         </div>
@@ -67,3 +238,4 @@ export function HeaderTools({ menu, categories }) {
     </>
   );
 }
+
