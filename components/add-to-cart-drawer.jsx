@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
-import { CreditCard, Minus, Plus, ShoppingBag, X } from "lucide-react";
+import { ChevronDown, CreditCard, Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
-import { addCartItem, createHandoffUrl, readAppliedCoupon, readCart, setAppliedCoupon } from "@/lib/cart-store";
+import { addCartItem, createHandoffUrl, readAppliedCoupon, readCart, removeCartItem, setAppliedCoupon, updateCartItem } from "@/lib/cart-store";
 import { cartSubtotal } from "@/lib/coupon-utils";
 import { CouponOffers } from "@/components/coupon-offers";
 
@@ -19,6 +20,15 @@ export function AddToCartDrawer({ product, buyNowUrl: suppliedBuyNowUrl, compact
   const subtotal = cartSubtotal(items);
   const checkoutUrl = createHandoffUrl(items, coupon, "checkout");
 
+  useEffect(() => {
+    if (!open) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event) => { if (event.key === "Escape") setOpen(false); };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+    return () => { document.body.style.overflow = previousOverflow; window.removeEventListener("keydown", closeOnEscape); };
+  }, [open]);
+
   function buyOne() {
     if (unavailable) return;
     window.location.href = createHandoffUrl([{ product, quantity, variationId: cartMeta.variationId || 0, variationAttributes: cartMeta.attributes || {} }], "", "checkout");
@@ -27,6 +37,16 @@ export function AddToCartDrawer({ product, buyNowUrl: suppliedBuyNowUrl, compact
   function addAndOpen() {
     const next = addCartItem(product, quantity, cartMeta);
     setItems(next); setCoupon(readAppliedCoupon()); setOpen(true);
+  }
+
+  function changeQuantity(key, nextQuantity) {
+    updateCartItem(key, nextQuantity);
+    setItems(readCart());
+  }
+
+  function removeItem(key) {
+    removeCartItem(key);
+    setItems(readCart());
   }
 
   const actionButton = product.has_options && !suppliedBuyNowUrl ? (
@@ -47,20 +67,23 @@ export function AddToCartDrawer({ product, buyNowUrl: suppliedBuyNowUrl, compact
         </div>
       ) : <>{actionButton}<button type="button" className="button secondary pdp-buy-now" onClick={buyOne} disabled={unavailable}><CreditCard size={17} /> Buy now</button></>}
 
-      {open ? (
+      {open && typeof document !== "undefined" ? createPortal(
         <div className="drawer-backdrop" onClick={() => setOpen(false)}>
-          <aside className="cart-drawer" onClick={(event) => event.stopPropagation()}>
-            <div className="drawer-heading"><h2>Bag</h2><button className="drawer-close" onClick={() => setOpen(false)}><X size={17} /> Close</button></div>
-            <div className="drawer-totals"><span>Items: ({items.reduce((sum, item) => sum + item.quantity, 0)})</span><span>Total: Rs. {subtotal.toLocaleString("en-IN")}</span></div>
-            <div className="drawer-progress"><i><b style={{ width: `${Math.min(100, subtotal / 3)}%` }} /></i><span>{subtotal >= 300 ? "Minimum order unlocked" : `Add Rs. ${Math.ceil(300 - subtotal)} more to checkout`}</span></div>
-            <div className="drawer-product">{product.images?.[0]?.src ? <img src={product.images[0].src} alt={product.name} /> : null}<div><h3>{product.name}</h3><p>{product.categories?.[0]?.name || "Meraki collection"}</p><strong>{formatPrice(product.prices)} x {quantity}</strong></div></div>
-            <CouponOffers items={items} appliedCode={coupon} onApply={(code) => { setAppliedCoupon(code); setCoupon(code); }} compact />
-            <div className="drawer-spacer" />
-            <Link className="button secondary" href="/cart">View bag</Link>
-            {subtotal >= 300 ? <a className="button drawer-checkout" href={checkoutUrl}><CreditCard size={18} /> Secure checkout</a> : <button className="button drawer-checkout" disabled>Minimum order Rs. 300</button>}
-            <Link className="button secondary" href="/shop">Continue shopping</Link>
+          <aside className="cart-drawer" role="dialog" aria-modal="true" aria-label="Shopping bag" onClick={(event) => event.stopPropagation()}>
+            <header className="drawer-heading"><div><span>Your bag</span><h2>{items.reduce((sum, item) => sum + item.quantity, 0)} items</h2></div><button className="drawer-close" onClick={() => setOpen(false)} aria-label="Close bag"><X size={19} /></button></header>
+            <div className="drawer-scroll">
+              <div className="drawer-progress"><div><span>{subtotal >= 300 ? "Minimum order unlocked" : `Add Rs. ${Math.ceil(300 - subtotal)} more`}</span><strong>Rs. 300 minimum</strong></div><i><b style={{ width: `${Math.min(100, subtotal / 3)}%` }} /></i></div>
+              <div className="drawer-items">
+                {items.map((item) => <article className="drawer-product" key={item.key}>
+                  <Link href={`/product/${item.product.slug}`} onClick={() => setOpen(false)}>{item.product.images?.[0]?.src ? <img src={item.product.images[0].src} alt={item.product.name} /> : null}</Link>
+                  <div className="drawer-product-copy"><small>{item.product.categories?.[0]?.name || "Meraki collection"}</small><Link href={`/product/${item.product.slug}`} onClick={() => setOpen(false)}><h3>{item.product.name}</h3></Link>{Object.entries(item.variationAttributes || {}).map(([key, value]) => <span key={key}>{key.replace("attribute_pa_", "")}: {value}</span>)}<strong>{formatPrice(item.product.prices)}</strong><div className="drawer-item-actions"><div className="drawer-quantity"><button onClick={() => changeQuantity(item.key, item.quantity - 1)} aria-label="Decrease quantity"><Minus size={13} /></button><span>{item.quantity}</span><button onClick={() => changeQuantity(item.key, item.quantity + 1)} aria-label="Increase quantity"><Plus size={13} /></button></div><button className="drawer-remove" onClick={() => removeItem(item.key)} aria-label={`Remove ${item.product.name}`}><Trash2 size={14} /></button></div></div>
+                </article>)}
+              </div>
+              <details className="drawer-offers"><summary><span>Coupons and offers</span><ChevronDown size={16} /></summary><CouponOffers items={items} appliedCode={coupon} onApply={(code) => { setAppliedCoupon(code); setCoupon(code); }} compact /></details>
+            </div>
+            <footer className="drawer-footer"><div className="drawer-total"><span>Subtotal</span><strong>Rs. {subtotal.toLocaleString("en-IN")}</strong></div><small>Shipping and final coupon validation at checkout</small>{subtotal >= 300 ? <a className="button drawer-checkout" href={checkoutUrl}><CreditCard size={18} /> Secure checkout</a> : <button className="button drawer-checkout" disabled>Minimum order Rs. 300</button>}<div className="drawer-footer-links"><Link href="/cart" onClick={() => setOpen(false)}>View full bag</Link><button onClick={() => setOpen(false)}>Continue shopping</button></div></footer>
           </aside>
-        </div>
+        </div>, document.body
       ) : null}
     </>
   );
