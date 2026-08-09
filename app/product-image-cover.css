@@ -1,0 +1,15 @@
+/* Product detail gallery images should fill the full visual frame. */
+.product-gallery .gallery-primary-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  background: transparent !important;
+}
+
+@media (max-width: 767px) {
+  .product-gallery .gallery-primary-img {
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+}
