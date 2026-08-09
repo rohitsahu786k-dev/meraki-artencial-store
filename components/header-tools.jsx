@@ -8,14 +8,27 @@ export function HeaderTools({ menu, categories }) {
   const [panel, setPanel] = useState(null);
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (query.trim().length < 2) return;
+    const openSearch = () => setPanel("search");
+    const openMenu = () => setPanel("menu");
+    window.addEventListener("meraki:search-open", openSearch);
+    window.addEventListener("meraki:menu-open", openMenu);
+    return () => { window.removeEventListener("meraki:search-open", openSearch); window.removeEventListener("meraki:menu-open", openMenu); };
+  }, []);
+
+  useEffect(() => {
+    const clean = query.trim();
+    if (clean.length < 2) { setSuggestions([]); setLoading(false); return undefined; }
     const controller = new AbortController();
     const timer = window.setTimeout(async () => {
-      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`, { signal: controller.signal }).catch(() => null);
+      setLoading(true);
+      const response = await fetch(`/api/search?q=${encodeURIComponent(clean)}`, { signal: controller.signal }).catch(() => null);
       if (response?.ok) setSuggestions((await response.json()).suggestions || []);
-    }, 220);
+      else setSuggestions([]);
+      setLoading(false);
+    }, 180);
     return () => { window.clearTimeout(timer); controller.abort(); };
   }, [query]);
 
@@ -33,18 +46,19 @@ export function HeaderTools({ menu, categories }) {
             <div className="header-panel-title"><strong>{panel === "search" ? "Search products" : "Menu"}</strong><button type="button" onClick={() => setPanel(null)} aria-label="Close panel"><X size={19} /></button></div>
             {panel === "search" ? (
               <div className="live-search">
-                <form action="/shop"><input autoFocus name="search" value={query} onChange={(event) => { const value = event.target.value; setQuery(value); if (value.trim().length < 2) setSuggestions([]); }} placeholder="Search products, categories..." /><button aria-label="Submit search"><Search size={18} /></button></form>
+                <form action="/shop"><input autoFocus name="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search products, categories..." autoComplete="off" /><button aria-label="Submit search"><Search size={18} /></button></form>
                 <div className="search-results">
-                  {suggestions.map((item) => <Link href={item.href} key={`${item.type}-${item.id}`} onClick={() => setPanel(null)}><span><small>{item.type === "product" ? "Product" : "Category"}</small>{item.label}</span><ChevronRight size={16} /></Link>)}
-                  {query.length >= 2 && !suggestions.length ? <p>No instant matches. Press enter for full search.</p> : null}
+                  {loading ? <p>Searching WooCommerce...</p> : null}
+                  {!loading && suggestions.map((item) => <Link href={item.href} key={`${item.type}-${item.id}`} onClick={() => setPanel(null)}><span><small>{item.type === "product" ? "Product" : "Category"}</small>{item.label}</span><ChevronRight size={16} /></Link>)}
+                  {!loading && query.trim().length >= 2 && !suggestions.length ? <p>No instant matches. Press enter to search the full catalog.</p> : null}
                 </div>
               </div>
             ) : (
               <nav className="drawer-menu">
                 {roots.map((item) => (
-                  <div key={item.id}><Link href={item.href} onClick={() => setPanel(null)}>{item.label}<ChevronRight size={15} /></Link>{menu.filter((child) => child.parent === item.id).slice(0, 10).map((child) => <Link className="drawer-submenu" href={child.href} key={child.id} onClick={() => setPanel(null)}>{child.label}</Link>)}</div>
+                  <div key={item.id}><Link href={item.href} onClick={() => setPanel(null)}>{item.label}<ChevronRight size={15} /></Link>{menu.filter((child) => child.parent === item.id).slice(0, 12).map((child) => <Link className="drawer-submenu" href={child.href} key={child.id} onClick={() => setPanel(null)}>{child.label}</Link>)}</div>
                 ))}
-                <div className="drawer-category-grid">{categories.slice(0, 8).map((category) => <Link href={`/category/${category.slug}`} key={category.id} onClick={() => setPanel(null)}>{category.name}</Link>)}</div>
+                <div className="drawer-category-grid">{categories.slice(0, 10).map((category) => <Link href={`/category/${category.slug}`} key={category.id} onClick={() => setPanel(null)}>{category.name}</Link>)}</div>
               </nav>
             )}
           </aside>
