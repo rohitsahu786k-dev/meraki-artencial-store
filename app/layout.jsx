@@ -3,6 +3,7 @@ import "./globals.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
+import { GlobalCartDrawer } from "@/components/global-cart-drawer";
 
 const montserrat = Montserrat({
   variable: "--font-retail",
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
         <main>{children}</main>
         <Footer />
         <MobileBottomNav />
+        <GlobalCartDrawer />
       </body>
     </html>
   );
