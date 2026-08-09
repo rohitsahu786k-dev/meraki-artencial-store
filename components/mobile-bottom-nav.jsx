@@ -1,23 +1,19 @@
-import Link from "next/link";
-import { Grid2X2, Heart, Home, Search, ShoppingBag } from "lucide-react";
+"use client";
 
-const tabs = [
-  ["Home", "/", Home],
-  ["Shop", "/shop", Search],
-  ["Cats", "/#categories", Grid2X2],
-  ["Wishlist", "/wishlist", Heart],
-  ["Cart", "/cart", ShoppingBag],
-];
+import Link from "next/link";
+import { Heart, Home, MessageCircle, Search, ShoppingBag } from "lucide-react";
+import { openCartDrawer } from "@/lib/cart-store";
+
+const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "917426915251";
 
 export function MobileBottomNav() {
   return (
     <nav className="mobile-bottom-nav" aria-label="Mobile app navigation">
-      {tabs.map(([label, href, Icon]) => (
-        <Link href={href} key={href}>
-          <Icon size={19} />
-          <span>{label}</span>
-        </Link>
-      ))}
+      <Link href="/"><Home size={19} /><span>Home</span></Link>
+      <button type="button" onClick={() => window.dispatchEvent(new CustomEvent("meraki:search-open"))}><Search size={19} /><span>Search</span></button>
+      <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noreferrer" className="mobile-whatsapp"><MessageCircle size={20} /><span>WhatsApp</span></a>
+      <Link href="/wishlist"><Heart size={19} /><span>Wishlist</span></Link>
+      <button type="button" onClick={openCartDrawer}><ShoppingBag size={19} /><span>Cart</span></button>
     </nav>
   );
 }
