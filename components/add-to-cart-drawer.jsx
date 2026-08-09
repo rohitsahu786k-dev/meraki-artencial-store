@@ -4,28 +4,25 @@ import { useState } from "react";
 import Link from "next/link";
 import { CreditCard, Minus, Plus, ShoppingBag, X } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
-import { wordpressUrl } from "@/lib/wp";
 import { addCartItem, createHandoffUrl, readAppliedCoupon, readCart, setAppliedCoupon } from "@/lib/cart-store";
 import { cartSubtotal } from "@/lib/coupon-utils";
 import { CouponOffers } from "@/components/coupon-offers";
 
-function addQuantity(url, quantity) {
-  if (!url || quantity <= 1) return url;
-  return `${url}${url.includes("?") ? "&" : "?"}quantity=${quantity}`;
-}
-
-export function AddToCartDrawer({ product, addToCartUrl, buyNowUrl: suppliedBuyNowUrl, compact = false, quantity: suppliedQuantity, disabled = false, cartMeta = {} }) {
+export function AddToCartDrawer({ product, buyNowUrl: suppliedBuyNowUrl, compact = false, quantity: suppliedQuantity, disabled = false, cartMeta = {} }) {
   const [open, setOpen] = useState(false);
   const [localQuantity, setLocalQuantity] = useState(1);
   const [items, setItems] = useState([]);
   const [coupon, setCoupon] = useState("");
   const quantity = suppliedQuantity ?? localQuantity;
   const productPage = `/product/${product.slug}`;
-  const addUrl = addQuantity(addToCartUrl, quantity);
-  const buyNowUrl = suppliedBuyNowUrl || (product.has_options ? productPage : addQuantity(wordpressUrl(`/checkout/?add-to-cart=${product.id}`), quantity));
   const unavailable = disabled || !product.is_in_stock;
   const subtotal = cartSubtotal(items);
   const checkoutUrl = createHandoffUrl(items, coupon, "checkout");
+
+  function buyOne() {
+    if (unavailable) return;
+    window.location.href = createHandoffUrl([{ product, quantity, variationId: cartMeta.variationId || 0, variationAttributes: cartMeta.attributes || {} }], "", "checkout");
+  }
 
   function addAndOpen() {
     const next = addCartItem(product, quantity, cartMeta);
@@ -46,9 +43,9 @@ export function AddToCartDrawer({ product, addToCartUrl, buyNowUrl: suppliedBuyN
             <div className="card-quantity"><button type="button" onClick={() => setLocalQuantity(Math.max(1, localQuantity - 1))} aria-label="Decrease quantity"><Minus size={13} /></button><span>{quantity}</span><button type="button" onClick={() => setLocalQuantity(localQuantity + 1)} aria-label="Increase quantity"><Plus size={13} /></button></div>
             {actionButton}
           </div>
-          <Link className="card-buy-now" href={buyNowUrl}><CreditCard size={14} /> Buy now</Link>
+          {product.has_options && !suppliedBuyNowUrl ? <Link className="card-buy-now" href={productPage}><CreditCard size={14} /> Buy now</Link> : <button type="button" className="card-buy-now" onClick={buyOne} disabled={unavailable}><CreditCard size={14} /> Buy now</button>}
         </div>
-      ) : actionButton}
+      ) : <>{actionButton}<button type="button" className="button secondary pdp-buy-now" onClick={buyOne} disabled={unavailable}><CreditCard size={17} /> Buy now</button></>}
 
       {open ? (
         <div className="drawer-backdrop" onClick={() => setOpen(false)}>

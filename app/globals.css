@@ -79,6 +79,7 @@
 .summary-trust span { display: flex; gap: 7px; align-items: center; font-size: 11px; }
 .premium-summary > small { display: block; line-height: 1.5; color: #777; }
 .drawer-progress { display: grid; gap: 7px; font-size: 10px; padding: 12px 0; }
+.pdp-buy-now { min-height: 46px; white-space: nowrap; }
 .checkout-review { border-top: 1px solid #dedbd4; padding: 24px 0; }
 .checkout-review h2 { font-size: 22px; font-weight: 400; }
 .checkout-review > p { max-width: 620px; color: #6c6962; line-height: 1.65; }
