@@ -7,10 +7,12 @@ import { couponEligibility, couponTitle } from "@/lib/coupon-utils";
 export function CouponOffers({ items = [], appliedCode = "", onApply, compact = false }) {
   const [coupons, setCoupons] = useState([]);
   const [copied, setCopied] = useState("");
+  const [manualCode, setManualCode] = useState(appliedCode || "");
 
+  useEffect(() => { setManualCode(appliedCode || ""); }, [appliedCode]);
   useEffect(() => { fetch("/api/coupons").then((response) => response.ok ? response.json() : { coupons: [] }).then((data) => setCoupons(data.coupons || [])).catch(() => setCoupons([])); }, []);
   const offers = useMemo(() => coupons.map((coupon) => ({ coupon, ...couponEligibility(coupon, items) })), [coupons, items]);
-  if (!offers.length) return null;
+  const knownApplied = coupons.some((coupon) => coupon.code.toLowerCase() === appliedCode.toLowerCase());
 
   async function copy(code) {
     await navigator.clipboard?.writeText(code);
@@ -18,10 +20,18 @@ export function CouponOffers({ items = [], appliedCode = "", onApply, compact = 
     window.setTimeout(() => setCopied(""), 1300);
   }
 
+  function submitManual(event) {
+    event.preventDefault();
+    if (!onApply) return;
+    onApply(manualCode.trim());
+  }
+
   return (
     <section className={`coupon-offers ${compact ? "compact" : ""}`}>
-      <div className="coupon-heading"><span><Gift size={17} /> Available offers</span><small>Verified from WooCommerce</small></div>
-      <div className="coupon-list">
+      <div className="coupon-heading"><span><Gift size={17} /> Available offers</span><small>WooCommerce validated at checkout</small></div>
+      {onApply ? <form className="coupon-manual" onSubmit={submitManual}><input value={manualCode} onChange={(event) => setManualCode(event.target.value.toUpperCase())} placeholder="Enter coupon code" aria-label="Coupon code" /><button type="submit" disabled={!manualCode.trim()}>{appliedCode && manualCode.trim().toLowerCase() === appliedCode.toLowerCase() ? "Applied" : "Apply"}</button>{appliedCode ? <button type="button" className="coupon-remove-manual" onClick={() => { setManualCode(""); onApply(""); }} aria-label="Remove coupon"><X size={15} /></button> : null}</form> : null}
+      {appliedCode && !knownApplied ? <p className="coupon-pending"><Check size={14} /> {appliedCode.toUpperCase()} added. WooCommerce will confirm eligibility at checkout.</p> : null}
+      {offers.length ? <div className="coupon-list">
         {offers.map(({ coupon, eligible, reason }) => {
           const applied = appliedCode.toLowerCase() === coupon.code.toLowerCase();
           return (
@@ -30,12 +40,12 @@ export function CouponOffers({ items = [], appliedCode = "", onApply, compact = 
               <div className="coupon-copy"><strong>{couponTitle(coupon)}</strong><span>{coupon.code.toUpperCase()}</span><small>{reason}</small></div>
               <div className="coupon-actions">
                 <button type="button" title="Copy coupon" aria-label={`Copy ${coupon.code}`} onClick={() => copy(coupon.code)}>{copied === coupon.code ? <Check size={15} /> : <Copy size={15} />}</button>
-                {onApply ? <button type="button" className="coupon-apply" disabled={!eligible} onClick={() => onApply(applied ? "" : coupon.code)}>{applied ? <><X size={13} /> Remove</> : "Apply"}</button> : null}
+                {onApply ? <button type="button" className="coupon-apply" disabled={!eligible} onClick={() => { setManualCode(applied ? "" : coupon.code.toUpperCase()); onApply(applied ? "" : coupon.code); }}>{applied ? <><X size={13} /> Remove</> : "Apply"}</button> : null}
               </div>
             </article>
           );
         })}
-      </div>
+      </div> : <p className="coupon-empty">Enter any WooCommerce coupon above. Live offer cards appear when coupon API credentials are configured.</p>}
     </section>
   );
 }
