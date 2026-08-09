@@ -1,6 +1,7 @@
 import { Cormorant_Garamond, Montserrat } from "next/font/google";
 import "./globals.css";
 import "./storefront-polish.css";
+import "./responsive-fixes.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
@@ -12,7 +13,14 @@ const cormorant = Cormorant_Garamond({ variable: "--font-editorial", subsets: ["
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   title: { default: "Meraki Artencial Store", template: "%s | Meraki Artencial Store" },
-  description: "Premium resin art, jewellery, dried flowers and accessories powered by WordPress.",
+  description: "Shop resin art supplies, dried flowers, bezels, moulds, anti-tarnish jewellery and creative accessories from Meraki Artencial Store.",
+  robots: { index: true, follow: true },
+  openGraph: {
+    type: "website",
+    siteName: "Meraki Artencial Store",
+    title: "Meraki Artencial Store",
+    description: "Premium resin art, jewellery, dried flowers and creative accessories with live WooCommerce inventory.",
+  },
 };
 
 export default function RootLayout({ children }) {
