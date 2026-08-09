@@ -2,6 +2,7 @@ import { Cormorant_Garamond, Montserrat } from "next/font/google";
 import "./globals.css";
 import "./storefront-polish.css";
 import "./responsive-fixes.css";
+import "./product-image-cover.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
