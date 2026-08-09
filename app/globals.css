@@ -3158,3 +3158,30 @@ body * {
   .pdp-purchase-panel .qty-row { grid-template-columns: 86px minmax(0, 1fr) 42px; }
   .pdp-purchase-panel .pdp-buy-now { grid-column: 1 / -1; grid-row: 2; width: 100%; }
 }
+
+/* Four-card product carousels and card variants */
+html, body { max-width: 100%; overflow-x: clip; }
+.product-stock-line { display: flex; justify-content: flex-end; min-height: 20px; margin-top: auto; font-size: 10px; }
+.card-variants { display: flex; min-width: 0; min-height: 34px; gap: 6px; margin: 4px 0 8px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; scroll-snap-type: x proximity; }
+.card-variants::-webkit-scrollbar { display: none; }
+.card-variants button { flex: 0 0 auto; min-width: 32px; height: 30px; border: 1px solid #d4d0c8; background: #fff; color: #171717; padding: 0 9px; font-size: 10px; scroll-snap-align: start; }
+.card-variants button.active { border-color: #111; background: #111; color: #fff; }
+.product-carousel { position: relative; min-width: 0; padding-top: 44px; }
+.product-carousel-controls { position: absolute; top: 0; right: 0; display: flex; gap: 6px; }
+.product-carousel-controls button { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid #cfcac1; background: #fff; padding: 0; }
+.product-carousel-track { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 54px) / 4.18); gap: 18px; overflow-x: auto; overflow-y: hidden; scroll-behavior: smooth; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; padding: 3px 12px 26px 0; }
+.product-carousel-track::-webkit-scrollbar { display: none; }
+.product-carousel-slide { min-width: 0; height: 100%; scroll-snap-align: start; }
+.product-carousel-slide .product-card { height: 100%; }
+
+@media (max-width: 980px) {
+  .product-carousel-track { grid-auto-columns: calc((100% - 24px) / 3.15); gap: 12px; }
+}
+
+@media (max-width: 620px) {
+  .product-carousel { padding-top: 38px; }
+  .product-carousel-track { grid-auto-columns: calc((100% - 8px) / 1.72); gap: 8px; margin-right: -16px; padding-right: 16px; }
+  .product-carousel-controls button { width: 32px; height: 32px; }
+  .card-variants { min-height: 30px; gap: 4px; }
+  .card-variants button { min-width: 29px; height: 27px; padding-inline: 7px; font-size: 9px; }
+}

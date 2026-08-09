@@ -2,8 +2,7 @@ import Link from "next/link";
 import { PackageCheck, ShieldCheck, Truck } from "lucide-react";
 import { CategoryCarousel } from "@/components/category-carousel";
 import { HeroCarousel } from "@/components/hero-carousel";
-import { ProductCard } from "@/components/product-card";
-import { ProductGrid } from "@/components/product-grid";
+import { ProductCarousel } from "@/components/product-carousel";
 import { SectionHeader, TrustBar } from "@/components/ui";
 import { InstagramFeed } from "@/components/instagram-feed";
 import { getCategories, getFrontPage, getHomeBanners, getInstagramFeed, getPopularProducts, getProducts, getProductsByCategory, getTopCategoriesFromProducts } from "@/lib/wp";
@@ -66,7 +65,7 @@ export default async function Home({ searchParams }) {
       <section className="section">
         <div className="container">
           <SectionHeader title="New in" href="/shop" action="Explore all" />
-          <ProductGrid products={(popularProducts.length ? popularProducts : products).slice(0, 8)} />
+          <ProductCarousel products={(popularProducts.length ? popularProducts : products).slice(0, 8)} />
         </div>
       </section>
 
@@ -74,13 +73,7 @@ export default async function Home({ searchParams }) {
         <section className="section collection-shelf" key={category.id}>
           <div className="container">
             <SectionHeader title={category.name} href={`/category/${category.slug}`} action="View collection" />
-            <div className="shelf-row">
-              {products.map((product) => (
-                <div className="shelf-card" key={product.id}>
-                  <ProductCard product={product} />
-                </div>
-              ))}
-            </div>
+            <ProductCarousel products={products} />
           </div>
         </section>
       ))}
@@ -96,7 +89,7 @@ export default async function Home({ searchParams }) {
       <section className="section">
         <div className="container">
           <SectionHeader title="Limited-time offers" href="/shop?on_sale=true" action="See deals" />
-          <ProductGrid products={(saleProducts.length ? saleProducts : products).slice(0, 8)} />
+          <ProductCarousel products={(saleProducts.length ? saleProducts : products).slice(0, 8)} />
         </div>
       </section>
       <InstagramFeed posts={instagramPosts} fallbackImages={products.map((product) => product.images?.[0]?.src).filter(Boolean)} />

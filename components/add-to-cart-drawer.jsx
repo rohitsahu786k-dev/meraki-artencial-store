@@ -9,14 +9,14 @@ import { addCartItem, createHandoffUrl, readAppliedCoupon, readCart, removeCartI
 import { cartSubtotal } from "@/lib/coupon-utils";
 import { CouponOffers } from "@/components/coupon-offers";
 
-export function AddToCartDrawer({ product, buyNowUrl: suppliedBuyNowUrl, compact = false, quantity: suppliedQuantity, disabled = false, cartMeta = {} }) {
+export function AddToCartDrawer({ product, compact = false, quantity: suppliedQuantity, disabled = false, cartMeta = {} }) {
   const [open, setOpen] = useState(false);
   const [localQuantity, setLocalQuantity] = useState(1);
   const [items, setItems] = useState([]);
   const [coupon, setCoupon] = useState("");
   const quantity = suppliedQuantity ?? localQuantity;
-  const productPage = `/product/${product.slug}`;
   const unavailable = disabled || !product.is_in_stock;
+  const needsOptions = product.has_options && !cartMeta.variationId;
   const subtotal = cartSubtotal(items);
   const checkoutUrl = createHandoffUrl(items, coupon, "checkout");
 
@@ -30,7 +30,7 @@ export function AddToCartDrawer({ product, buyNowUrl: suppliedBuyNowUrl, compact
   }, [open]);
 
   function buyOne() {
-    if (unavailable) return;
+    if (unavailable || needsOptions) return;
     window.location.href = createHandoffUrl([{ product, quantity, variationId: cartMeta.variationId || 0, variationAttributes: cartMeta.attributes || {} }], "", "checkout");
   }
 
@@ -49,11 +49,7 @@ export function AddToCartDrawer({ product, buyNowUrl: suppliedBuyNowUrl, compact
     setItems(readCart());
   }
 
-  const actionButton = product.has_options && !suppliedBuyNowUrl ? (
-    <Link className={compact ? "card-quick-add" : "button add-cart-button"} href={productPage}><ShoppingBag size={compact ? 15 : 18} /> Choose options</Link>
-  ) : (
-    <button className={compact ? "card-quick-add" : "button add-cart-button"} onClick={addAndOpen} disabled={unavailable}><ShoppingBag size={compact ? 15 : 18} /> {unavailable ? "Out of stock" : "Add to bag"}</button>
-  );
+  const actionButton = <button className={compact ? "card-quick-add" : "button add-cart-button"} onClick={addAndOpen} disabled={unavailable || needsOptions}><ShoppingBag size={compact ? 15 : 18} /> {!product.is_in_stock ? "Out of stock" : needsOptions ? "Select option" : "Add to bag"}</button>;
 
   return (
     <>
@@ -63,7 +59,7 @@ export function AddToCartDrawer({ product, buyNowUrl: suppliedBuyNowUrl, compact
             <div className="card-quantity"><button type="button" onClick={() => setLocalQuantity(Math.max(1, localQuantity - 1))} aria-label="Decrease quantity"><Minus size={13} /></button><span>{quantity}</span><button type="button" onClick={() => setLocalQuantity(localQuantity + 1)} aria-label="Increase quantity"><Plus size={13} /></button></div>
             {actionButton}
           </div>
-          {product.has_options && !suppliedBuyNowUrl ? <Link className="card-buy-now" href={productPage}><CreditCard size={14} /> Buy now</Link> : <button type="button" className="card-buy-now" onClick={buyOne} disabled={unavailable}><CreditCard size={14} /> Buy now</button>}
+          <button type="button" className="card-buy-now" onClick={buyOne} disabled={unavailable || needsOptions}><CreditCard size={14} /> Buy now</button>
         </div>
       ) : <>{actionButton}<button type="button" className="button secondary pdp-buy-now" onClick={buyOne} disabled={unavailable}><CreditCard size={17} /> Buy now</button></>}
 

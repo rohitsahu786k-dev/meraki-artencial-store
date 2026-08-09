@@ -1,11 +1,14 @@
+"use client";
+
 import Link from "next/link";
-import { Star } from "lucide-react";
+import { useMemo, useState } from "react";
 import { formatPrice } from "@/lib/utils";
 import { WpImage } from "@/components/wp-image";
 import { AddToCartDrawer } from "@/components/add-to-cart-drawer";
 import { WishlistButton } from "@/components/wishlist-button";
 
 export function ProductCard({ product }) {
+  const [selected, setSelected] = useState({});
   const image = product.images?.[0];
   const regular = product.prices?.regular_price !== product.prices?.price ? product.prices?.regular_price : null;
   const regularPrice = regular
@@ -15,8 +18,9 @@ export function ProductCard({ product }) {
   const regularValue = Number(regular || 0);
   const discount = regularValue > priceValue ? Math.round(((regularValue - priceValue) / regularValue) * 100) : 0;
   const secondImage = product.images?.[1];
-  const productOrigin = product.permalink ? new URL(product.permalink).origin : "";
-  const addToCartUrl = product.has_options ? product.permalink : `${productOrigin}/?add-to-cart=${product.id}`;
+  const variationAttributes = product.attributes?.filter((attribute) => attribute.has_variations) || [];
+  const variation = useMemo(() => product.variations?.find((candidate) => candidate.attributes?.every((attribute) => normalize(selected[attribute.name]) === normalize(attribute.value))), [product.variations, selected]);
+  const cardAttributes = Object.fromEntries(variationAttributes.map((attribute) => [`attribute_${attribute.taxonomy}`, selected[attribute.name]]));
 
   return (
     <article className="product-card">
@@ -39,12 +43,14 @@ export function ProductCard({ product }) {
           </div>
           {discount ? <span className="discount-text">{discount}% off</span> : null}
         </div>
-        <div className="product-meta-line">
-          <span><Star size={13} fill="currentColor" /> {product.average_rating || "New"}{product.review_count ? ` (${product.review_count})` : ""}</span>
-          <span className={product.is_in_stock ? "stock-in" : "stock-out"}>{product.has_options ? "Options" : product.is_in_stock ? "In stock" : "Out of stock"}</span>
-        </div>
-        <AddToCartDrawer product={product} addToCartUrl={product.has_options ? `/product/${product.slug}` : addToCartUrl} compact />
+        {variationAttributes.map((attribute) => <div className="card-variants" key={attribute.name} aria-label={`${attribute.name} options`}>{attribute.terms?.filter((term) => term?.name).map((term) => <button type="button" className={selected[attribute.name] === term.slug ? "active" : ""} onClick={() => setSelected((current) => ({ ...current, [attribute.name]: term.slug }))} key={term.slug || term.name}>{term.name}</button>)}</div>)}
+        <div className="product-stock-line"><span className={product.is_in_stock ? "stock-in" : "stock-out"}>{product.is_in_stock ? "In stock" : "Out of stock"}</span></div>
+        <AddToCartDrawer product={product} compact cartMeta={{ variationId: variation?.id, attributes: cardAttributes }} disabled={product.has_options && !variation} />
       </div>
     </article>
   );
+}
+
+function normalize(value = "") {
+  return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
