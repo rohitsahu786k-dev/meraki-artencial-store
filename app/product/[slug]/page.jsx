@@ -4,14 +4,14 @@ import { ProductGrid } from "@/components/product-grid";
 import { ProductPurchasePanel } from "@/components/product-purchase-panel";
 import { ProductGallery } from "@/components/product-gallery";
 import { getProduct, getRelatedProducts, getYoastHead } from "@/lib/wp";
-import { formatPrice, stripHtml, yoastToMetadata } from "@/lib/utils";
+import { decodeHtml, formatPrice, stripHtml, yoastToMetadata } from "@/lib/utils";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const product = await getProduct(slug);
   const yoast = product?.permalink ? await getYoastHead(product.permalink) : null;
   const metadata = yoastToMetadata(yoast?.json, {
-    title: product?.name || "Product",
+    title: decodeHtml(product?.name || "Product"),
     description: stripHtml(product?.short_description || product?.description || "Meraki Artencial Store product."),
   });
   const canonical = `${(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, "")}/product/${slug}`;
@@ -36,11 +36,14 @@ export default async function ProductPage({ params }) {
   const regularNum = Number(product.prices?.regular_price || 0) / Math.pow(10, minor);
   const discountPercent = regularNum > priceNum ? Math.round(((regularNum - priceNum) / regularNum) * 100) : 0;
 
+  const productTitle = decodeHtml(product.name);
+  const categoryTitle = decodeHtml(product.categories?.[0]?.name || "Products");
+
   const productUrl = `${(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, "")}/product/${slug}`;
   const schema = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: product.name,
+    name: productTitle,
     image: images.map((image) => image.src),
     description: stripHtml(product.short_description || product.description),
     sku: product.sku || String(product.id),
@@ -62,15 +65,15 @@ export default async function ProductPage({ params }) {
         <span>/</span>
         <Link href="/shop">Shop</Link>
         <span>/</span>
-        <Link href={`/category/${product.categories?.[0]?.slug || ""}`}>{product.categories?.[0]?.name || "Products"}</Link>
+        <Link href={`/category/${product.categories?.[0]?.slug || ""}`}>{categoryTitle}</Link>
         <span>/</span>
-        <span>{product.name}</span>
+        <span>{productTitle}</span>
       </nav>
       <section className="product-detail professional-pdp">
-        <ProductGallery images={images.slice(0, 10)} name={product.name} />
+        <ProductGallery images={images} name={productTitle} />
         <aside className="product-summary">
-          <span className="eyebrow">{product.categories?.[0]?.name || "Meraki Collection"}</span>
-          <h1>{product.name}</h1>
+          <span className="eyebrow">{categoryTitle}</span>
+          <h1>{productTitle}</h1>
           <div className="pdp-meta-row">
             <span className={product.is_in_stock ? "stock-badge stock-in" : "stock-badge stock-out"}>
               <PackageCheck size={14} /> {product.is_in_stock ? "In Stock & Ready to Ship" : "Currently Out of Stock"}
@@ -151,4 +154,5 @@ export default async function ProductPage({ params }) {
     </div>
   );
 }
+
 

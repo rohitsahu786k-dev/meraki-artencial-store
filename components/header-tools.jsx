@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ChevronDown, ChevronRight, Heart, HelpCircle, LogIn, Menu, MessageCircle, Offer, Package, Search, ShoppingBag, Sparkles, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { decodeHtml } from "@/lib/utils";
 
 const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "917426915251";
 
@@ -111,9 +112,9 @@ export function HeaderTools({ menu = [], categories = [] }) {
                   {categories.length > 0 && !query && (
                     <div className="search-quick-pills">
                       <span>Popular:</span>
-                      {categories.slice(0, 5).map((cat) => (
+                      {categories.slice(0, 8).map((cat) => (
                         <Link key={cat.id} href={`/category/${cat.slug}`} onClick={() => setPanel(null)}>
-                          {cat.name}
+                          {decodeHtml(cat.name)}
                         </Link>
                       ))}
                     </div>
@@ -124,7 +125,7 @@ export function HeaderTools({ menu = [], categories = [] }) {
                       <Link href={item.href} key={`${item.type}-${item.id}`} onClick={() => setPanel(null)}>
                         <span>
                           <small>{item.type === "product" ? "Product" : "Category"}</small>
-                          {item.label}
+                          {decodeHtml(item.label)}
                         </span>
                         <ChevronRight size={16} />
                       </Link>
@@ -163,9 +164,9 @@ export function HeaderTools({ menu = [], categories = [] }) {
                     </div>
                     {openCategory && (
                       <div className="myntra-category-list">
-                        {categories.slice(0, 16).map((category) => (
+                        {categories.slice(0, 20).map((category) => (
                           <Link href={`/category/${category.slug}`} key={category.id} onClick={() => setPanel(null)} className="myntra-cat-link">
-                            <span className="cat-name">{category.name}</span>
+                            <span className="cat-name">{decodeHtml(category.name)}</span>
                             {category.count > 0 && <span className="cat-count">{category.count}</span>}
                           </Link>
                         ))}
@@ -183,7 +184,7 @@ export function HeaderTools({ menu = [], categories = [] }) {
                         <div key={item.id} className="myntra-menu-item-group">
                           <div className="myntra-menu-row">
                             <Link href={item.href} onClick={() => setPanel(null)} className="myntra-main-link">
-                              {item.label}
+                              {decodeHtml(item.label)}
                             </Link>
                             {children.length > 0 && (
                               <button type="button" className="sub-toggle-btn" onClick={() => toggleParent(item.id)}>
@@ -195,7 +196,7 @@ export function HeaderTools({ menu = [], categories = [] }) {
                             <div className="myntra-sub-list">
                               {children.map((child) => (
                                 <Link href={child.href} key={child.id} onClick={() => setPanel(null)}>
-                                  {child.label}
+                                  {decodeHtml(child.label)}
                                 </Link>
                               ))}
                             </div>
@@ -238,4 +239,5 @@ export function HeaderTools({ menu = [], categories = [] }) {
     </>
   );
 }
+
 
