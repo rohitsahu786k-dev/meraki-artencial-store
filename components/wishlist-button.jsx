@@ -20,28 +20,35 @@ function savedProduct(product) {
   };
 }
 
+function writeWishlist(items) {
+  if (typeof window === "undefined") return items;
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  window.dispatchEvent(new CustomEvent("meraki:wishlist", { detail: items }));
+  return items;
+}
+
 export function addWishlistItem(product) {
   const current = readWishlist();
   if (current.some((item) => item.id === product.id)) return current;
-  const next = [...current, savedProduct(product)];
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-  window.dispatchEvent(new CustomEvent("meraki:wishlist", { detail: next }));
-  return next;
+  return writeWishlist([...current, savedProduct(product)]);
+}
+
+export function removeWishlistItem(productId) {
+  return writeWishlist(readWishlist().filter((item) => item.id !== productId));
 }
 
 export function WishlistButton({ product, className = "card-wishlist" }) {
   const [active, setActive] = useState(false);
   useEffect(() => {
-    const frame = window.requestAnimationFrame(() => setActive(readWishlist().some((item) => item.id === product.id)));
-    return () => window.cancelAnimationFrame(frame);
+    const update = () => setActive(readWishlist().some((item) => item.id === product.id));
+    update();
+    window.addEventListener("meraki:wishlist", update);
+    return () => window.removeEventListener("meraki:wishlist", update);
   }, [product.id]);
 
   function toggle() {
-    const current = readWishlist();
-    const next = current.some((item) => item.id === product.id) ? current.filter((item) => item.id !== product.id) : [...current, savedProduct(product)];
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    setActive(next.some((item) => item.id === product.id));
-    window.dispatchEvent(new CustomEvent("meraki:wishlist", { detail: next }));
+    if (active) removeWishlistItem(product.id);
+    else addWishlistItem(product);
   }
 
   return <button type="button" className={`${className} ${active ? "active" : ""}`} onClick={toggle} aria-label={active ? `Remove ${product.name} from wishlist` : `Save ${product.name} to wishlist`}><Heart size={17} fill={active ? "currentColor" : "none"} /></button>;
