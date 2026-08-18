@@ -13,8 +13,19 @@ function normalize(value = "") {
 
 export function ProductPurchasePanel({ product }) {
   const [quantity, setQuantity] = useState(1);
-  const [selected, setSelected] = useState({});
   const variationAttributes = product.attributes?.filter((attribute) => attribute.has_variations) || [];
+
+  // Automatically initialize with the first option of each variation attribute
+  const [selected, setSelected] = useState(() => {
+    const initial = {};
+    (product.attributes || []).forEach((attr) => {
+      const first = attr.terms?.find((t) => t?.name || t?.slug);
+      if (first) {
+        initial[attr.name] = first.slug || first.name;
+      }
+    });
+    return initial;
+  });
   
   const ready = !product.has_options || variationAttributes.every((attribute) => selected[attribute.name]);
   
@@ -44,68 +55,59 @@ export function ProductPurchasePanel({ product }) {
     <div className="pdp-purchase-panel">
       {product.attributes?.map((attribute) => {
         const isColor = isColorAttribute(attribute.taxonomy || attribute.name);
-        const selectedValue = selected[attribute.name];
+        const terms = attribute.terms?.filter((term) => term?.name) || [];
+        if (!terms.length) return null;
+
+        const currentSlug = selected[attribute.name];
+        const currentTerm = terms.find((t) => t.slug === currentSlug || t.name === currentSlug) || terms[0];
+        const currentDisplayName = decodeHtml(currentTerm?.name || currentSlug || "");
 
         return (
-          <div className="option-block" key={attribute.name}>
-            <div className="option-label">
-              <span className="option-title">{attribute.name}:</span>
-              {selectedValue ? (
-                <span className="selected-value-badge">
-                  {selectedValue}
-                </span>
-              ) : (
-                <small className="select-prompt">Please choose</small>
-              )}
+          <div className="pdp-option-card" key={attribute.name}>
+            <div className="pdp-option-header">
+              <span className="pdp-option-title">{attribute.name}:</span>
+              <strong className="pdp-option-active-name">{currentDisplayName}</strong>
             </div>
 
-            <div className={`option-items ${isColor ? "color-swatches-grid" : "option-pills"}`}>
-              {attribute.terms
-                ?.filter((term) => term?.name)
-                .map((term) => {
-                  const isSelected = selected[attribute.name] === term.slug || selected[attribute.name] === term.name;
-                  const swatch = isColor ? getColorSwatch(term.slug || term.name) : null;
+            <div className={`pdp-swatches-row ${isColor ? "is-color-row" : "is-pill-row"}`}>
+              {terms.map((term) => {
+                const isSelected = selected[attribute.name] === term.slug || selected[attribute.name] === term.name;
+                const swatch = isColor ? getColorSwatch(term.slug || term.name) : null;
 
-                  if (isColor && swatch) {
-                    return (
-                      <button
-                        type="button"
-                        className={`pdp-swatch-circle ${isSelected ? "active" : ""}`}
-                        style={{
-                          background: swatch.background,
-                          borderColor: swatch.border,
-                        }}
-                        title={decodeHtml(term.name)}
-                        aria-label={decodeHtml(term.name)}
-                        onClick={() => setSelected((current) => ({ ...current, [attribute.name]: term.slug }))}
-                        key={`${attribute.name}-${term.slug || term.name}`}
-                      >
-                        {isSelected ? <Check size={14} color={swatch.textColor} strokeWidth={3} /> : null}
-                      </button>
-                    );
-                  }
-
+                if (isColor && swatch) {
                   return (
                     <button
                       type="button"
-                      className={`pdp-size-pill ${isSelected ? "active" : ""}`}
-                      onClick={() => setSelected((current) => ({ ...current, [attribute.name]: term.slug }))}
+                      className={`pdp-swatch-circle ${isSelected ? "active" : ""}`}
+                      style={{
+                        background: swatch.background,
+                        borderColor: swatch.border,
+                      }}
+                      title={decodeHtml(term.name)}
+                      aria-label={decodeHtml(term.name)}
+                      onClick={() => setSelected((current) => ({ ...current, [attribute.name]: term.slug || term.name }))}
                       key={`${attribute.name}-${term.slug || term.name}`}
                     >
-                      {decodeHtml(term.name)}
+                      {isSelected ? <Check size={14} color={swatch.textColor} strokeWidth={3} /> : null}
                     </button>
                   );
-                })}
+                }
+
+                return (
+                  <button
+                    type="button"
+                    className={`pdp-size-pill ${isSelected ? "active" : ""}`}
+                    onClick={() => setSelected((current) => ({ ...current, [attribute.name]: term.slug || term.name }))}
+                    key={`${attribute.name}-${term.slug || term.name}`}
+                  >
+                    {decodeHtml(term.name)}
+                  </button>
+                );
+              })}
             </div>
           </div>
         );
       })}
-
-      {product.has_options && !ready ? (
-        <div className="variation-notice-box">
-          <span>⚠️ Please select all options above to proceed.</span>
-        </div>
-      ) : null}
 
       <div className="qty-row">
         <div className="pdp-quantity">
@@ -140,6 +142,21 @@ export function ProductPurchasePanel({ product }) {
       </div>
 
       <CouponOffers items={[{ product, quantity }]} compact />
+
+      <div className="pdp-trust-banner">
+        <div className="pdp-trust-item">
+          <span className="pdp-trust-icon">✨</span>
+          <span>100% Quality Checked</span>
+        </div>
+        <div className="pdp-trust-item">
+          <span className="pdp-trust-icon">🚚</span>
+          <span>Fast Pan-India Delivery</span>
+        </div>
+        <div className="pdp-trust-item">
+          <span className="pdp-trust-icon">🔒</span>
+          <span>Secure Nimbbl UPI / Card Checkout</span>
+        </div>
+      </div>
     </div>
   );
 }
