@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Check, ChevronDown, ChevronLeft, ChevronRight, Grid2X2, Grid3X3, LayoutGrid, SlidersHorizontal, X } from "lucide-react";
 import { ProductCard } from "@/components/product-card";
@@ -10,6 +9,7 @@ import { decodeHtml, getColorSwatch } from "@/lib/utils";
 function withQuery(basePath, current, updates) {
   const next = new URLSearchParams();
   Object.entries({ ...current, ...updates }).forEach(([key, value]) => {
+    if (Array.isArray(value)) value = value[0];
     if (value !== undefined && value !== null && value !== "") next.set(key, String(value));
   });
   const query = next.toString();
@@ -35,7 +35,7 @@ export function CollectionBrowser({ products = [], pagination, categories = [], 
   const endIndex = Math.min(totalProducts, currentPage * perPage);
 
   const currentSort = activeQuery.orderby
-    ? `${activeQuery.orderby}:${activeQuery.order || "desc"}`
+    ? `${Array.isArray(activeQuery.orderby) ? activeQuery.orderby[0] : activeQuery.orderby}:${Array.isArray(activeQuery.order) ? activeQuery.order[0] : (activeQuery.order || "desc")}`
     : "date:desc";
 
   function handleSortChange(e) {
@@ -81,9 +81,7 @@ export function CollectionBrowser({ products = [], pagination, categories = [], 
     <aside className="filter-panel myntra-filter">
       <div className="filter-title">
         <span>Filters {activeCount ? `(${activeCount})` : ""}</span>
-        <button type="button" onClick={() => setFiltersOpen(false)} aria-label="Close filters">
-          <X size={18} />
-        </button>
+        <button type="button" onClick={() => setFiltersOpen(false)} aria-label="Close filters"><X size={18} /></button>
       </div>
       {activeCount ? (
         <Link className="clear-filters" href={withQuery(basePath, activeQuery, Object.fromEntries(activeEntries.map(([k]) => [k, null])))} onClick={() => setFiltersOpen(false)}>
@@ -92,9 +90,7 @@ export function CollectionBrowser({ products = [], pagination, categories = [], 
       ) : null}
 
       <details open>
-        <summary>
-          Categories <ChevronDown size={15} />
-        </summary>
+        <summary>Categories <ChevronDown size={15} /></summary>
         <div className="filter-options">
           {visibleCategories.slice(0, 35).map((category) => (
             <Link href={`/category/${category.slug}`} key={category.id} onClick={() => setFiltersOpen(false)}>
@@ -107,9 +103,7 @@ export function CollectionBrowser({ products = [], pagination, categories = [], 
       </details>
 
       <details open>
-        <summary>
-          Availability <ChevronDown size={15} />
-        </summary>
+        <summary>Availability <ChevronDown size={15} /></summary>
         <Link href={toggleHref("stock_status", "instock")}>
           <span className="filter-check">{activeQuery.stock_status === "instock" ? <Check size={11} /> : null}</span>
           <span>In stock only</span>
@@ -210,9 +204,8 @@ export function CollectionBrowser({ products = [], pagination, categories = [], 
       <div className="collection-toolbar">
         <div className="toolbar-left">
           <button type="button" className="mobile-filter-trigger" onClick={() => setFiltersOpen(true)}>
-            <SlidersHorizontal size={16} /> Filters {activeCount ? `(${activeCount})` : ""}
+            <SlidersHorizontal size={16} /> <span>Filters {activeCount ? `(${activeCount})` : ""}</span>
           </button>
-          
           <div className="sort-select-wrapper">
             <label htmlFor="collection-sort-select" className="sr-only">Sort by</label>
             <select
