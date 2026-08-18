@@ -80,17 +80,6 @@ export default async function ProductPage({ params }) {
             </span>
             {product.sku ? <span className="sku-tag">SKU: {product.sku}</span> : null}
           </div>
-          <div className="pdp-price-row">
-            <div className="price-box">
-              <div className="price">{formatPrice(product.prices)}</div>
-              {discountPercent > 0 && (
-                <span className="discount-tag">
-                  <Tag size={12} /> {discountPercent}% OFF
-                </span>
-              )}
-            </div>
-            <small className="mrp-note">Inclusive of all taxes. Free shipping on orders over ₹3,000.</small>
-          </div>
 
           {product.short_description ? <div className="content pdp-intro" dangerouslySetInnerHTML={{ __html: product.short_description }} /> : null}
 

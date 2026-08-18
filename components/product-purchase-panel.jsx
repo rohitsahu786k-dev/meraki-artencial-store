@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Minus, Plus, ShoppingBag } from "lucide-react";
+import { Check, Minus, Plus, ShoppingBag, Tag } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AddToCartDrawer } from "@/components/add-to-cart-drawer";
 import { WishlistButton } from "@/components/wishlist-button";
@@ -37,6 +37,25 @@ export function ProductPurchasePanel({ product }) {
     [product.variations, selected]
   );
 
+  // Dynamic Price Calculation
+  const basePrices = product.prices || { price: "0", currency_code: "INR", currency_minor_unit: 2 };
+  const minor = basePrices.currency_minor_unit ?? 2;
+
+  const variationPriceRaw = variation?.prices?.price || (variation?.price ? String(Math.round(Number(variation.price) * Math.pow(10, minor))) : null);
+  const activePriceObj = variationPriceRaw ? { ...basePrices, price: variationPriceRaw } : basePrices;
+  
+  const variationRegularRaw = variation?.prices?.regular_price || (variation?.regular_price ? String(Math.round(Number(variation.regular_price) * Math.pow(10, minor))) : null);
+  const regularPriceObj = variationRegularRaw ? { ...basePrices, price: variationRegularRaw } : (basePrices.regular_price !== basePrices.price ? { ...basePrices, price: basePrices.regular_price } : null);
+
+  const unitValue = Number(activePriceObj.price || 0) / Math.pow(10, minor);
+  const regularValue = regularPriceObj ? Number(regularPriceObj.price || 0) / Math.pow(10, minor) : unitValue;
+  const discountPercent = regularValue > unitValue ? Math.round(((regularValue - unitValue) / regularValue) * 100) : 0;
+
+  const totalValue = unitValue * quantity;
+  const totalFormattedPrice = formatPrice({ ...activePriceObj, price: String(Math.round(totalValue * Math.pow(10, minor))) });
+  const activeFormattedPrice = formatPrice(activePriceObj);
+  const regularFormattedPrice = regularPriceObj ? formatPrice(regularPriceObj) : null;
+
   const root = product.permalink ? new URL(product.permalink).origin : "";
   const params = new URLSearchParams({ "add-to-cart": String(product.id), quantity: String(quantity) });
 
@@ -53,6 +72,32 @@ export function ProductPurchasePanel({ product }) {
 
   return (
     <div className="pdp-purchase-panel">
+      {/* Real-time Dynamic Price & Subtotal Calculator */}
+      <div className="pdp-dynamic-price-box">
+        <div className="pdp-price-header-row">
+          <div className="pdp-price-group">
+            <span className="pdp-live-price">{activeFormattedPrice}</span>
+            {regularFormattedPrice && regularFormattedPrice !== activeFormattedPrice ? (
+              <span className="pdp-live-old-price">{regularFormattedPrice}</span>
+            ) : null}
+          </div>
+
+          {discountPercent > 0 ? (
+            <span className="pdp-live-discount">
+              <Tag size={12} /> {discountPercent}% OFF
+            </span>
+          ) : null}
+
+          {quantity > 1 ? (
+            <div className="pdp-live-total-pill">
+              <span>Total: <strong>{totalFormattedPrice}</strong></span>
+              <small>({quantity} items)</small>
+            </div>
+          ) : null}
+        </div>
+
+        <small className="mrp-note">Inclusive of all taxes. Free shipping on orders over ₹3,000.</small>
+      </div>
       {product.attributes?.map((attribute) => {
         const isColor = isColorAttribute(attribute.taxonomy || attribute.name);
         const terms = attribute.terms?.filter((term) => term?.name) || [];

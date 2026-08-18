@@ -1640,6 +1640,80 @@ html, body, main {
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15) !important;
 }
 
+/* Real-time Dynamic Price Calculator Box */
+.pdp-dynamic-price-box {
+  margin-bottom: 20px !important;
+  padding: 14px 16px !important;
+  background: #f8fafc !important;
+  border: 1.5px solid #e2e8f0 !important;
+  border-radius: 14px !important;
+}
+
+.pdp-price-header-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+  margin-bottom: 6px !important;
+}
+
+.pdp-price-group {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 10px !important;
+}
+
+.pdp-live-price {
+  font-size: 28px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  letter-spacing: -0.5px !important;
+  line-height: 1 !important;
+}
+
+.pdp-live-old-price {
+  font-size: 16px !important;
+  color: #94a3b8 !important;
+  text-decoration: line-through !important;
+  font-weight: 600 !important;
+}
+
+.pdp-live-discount {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  background: #fef2f2 !important;
+  color: #ef4444 !important;
+  border: 1px solid #fecaca !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  padding: 3px 10px !important;
+  border-radius: 99px !important;
+}
+
+.pdp-live-total-pill {
+  margin-left: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: #0f172a !important;
+  color: #ffffff !important;
+  padding: 5px 14px !important;
+  border-radius: 99px !important;
+  font-size: 12px !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15) !important;
+}
+
+.pdp-live-total-pill strong {
+  font-size: 14px !important;
+  color: #38bdf8 !important;
+}
+
+.pdp-live-total-pill small {
+  color: #94a3b8 !important;
+  font-size: 11px !important;
+}
+
 .shopify-size-box:hover {
   border-color: #0f172a;
   background: #f8fafc;
