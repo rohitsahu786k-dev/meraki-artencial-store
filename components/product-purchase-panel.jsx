@@ -69,41 +69,43 @@ export function ProductPurchasePanel({ product }) {
               <strong className="shopify-variant-val">{currentDisplayName}</strong>
             </div>
 
-            <div className={`shopify-swatch-list ${isColor ? "is-color" : "is-pill"}`}>
-              {terms.map((term) => {
-                const isSelected = selected[attribute.name] === term.slug || selected[attribute.name] === term.name;
-                const swatch = isColor ? getColorSwatch(term.slug || term.name) : null;
+            <div className="shopify-swatch-slider-container">
+              <div className="shopify-swatch-slider-track">
+                {terms.map((term) => {
+                  const isSelected = selected[attribute.name] === term.slug || selected[attribute.name] === term.name;
+                  const swatch = isColor ? getColorSwatch(term.slug || term.name) : null;
 
-                if (isColor && swatch) {
+                  if (isColor && swatch) {
+                    return (
+                      <button
+                        type="button"
+                        className={`shopify-square-swatch ${isSelected ? "is-selected" : ""}`}
+                        style={{
+                          background: swatch.background,
+                          borderColor: swatch.border,
+                        }}
+                        title={decodeHtml(term.name)}
+                        aria-label={decodeHtml(term.name)}
+                        onClick={() => setSelected((current) => ({ ...current, [attribute.name]: term.slug || term.name }))}
+                        key={`${attribute.name}-${term.slug || term.name}`}
+                      >
+                        {isSelected ? <Check size={14} color={swatch.textColor} strokeWidth={3} /> : null}
+                      </button>
+                    );
+                  }
+
                   return (
                     <button
                       type="button"
-                      className={`shopify-swatch-dot ${isSelected ? "is-active" : ""}`}
-                      style={{
-                        background: swatch.background,
-                        borderColor: swatch.border,
-                      }}
-                      title={decodeHtml(term.name)}
-                      aria-label={decodeHtml(term.name)}
+                      className={`shopify-size-box ${isSelected ? "is-active" : ""}`}
                       onClick={() => setSelected((current) => ({ ...current, [attribute.name]: term.slug || term.name }))}
                       key={`${attribute.name}-${term.slug || term.name}`}
                     >
-                      {isSelected ? <Check size={13} color={swatch.textColor} strokeWidth={3} /> : null}
+                      {decodeHtml(term.name)}
                     </button>
                   );
-                }
-
-                return (
-                  <button
-                    type="button"
-                    className={`shopify-size-box ${isSelected ? "is-active" : ""}`}
-                    onClick={() => setSelected((current) => ({ ...current, [attribute.name]: term.slug || term.name }))}
-                    key={`${attribute.name}-${term.slug || term.name}`}
-                  >
-                    {decodeHtml(term.name)}
-                  </button>
-                );
-              })}
+                })}
+              </div>
             </div>
           </div>
         );

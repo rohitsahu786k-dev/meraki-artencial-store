@@ -1551,52 +1551,93 @@ html, body, main {
   text-transform: capitalize;
 }
 
-.shopify-swatch-list {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+.shopify-swatch-slider-container {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  margin-top: 8px !important;
 }
 
-.shopify-swatch-dot {
-  width: 34px;
-  height: 34px;
-  min-width: 34px;
-  min-height: 34px;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  flex-shrink: 0;
-  transition: transform 140ms ease, box-shadow 140ms ease;
-  position: relative;
-  outline: none;
-  padding: 0;
+.shopify-swatch-slider-track {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important; /* Visible spacing between each color box like Shopify */
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-behavior: smooth !important;
+  padding: 6px 4px 10px 4px !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #cbd5e1 transparent !important;
+  -webkit-overflow-scrolling: touch !important;
+  width: 100% !important;
 }
 
-.shopify-swatch-dot:hover {
-  transform: scale(1.12);
+.shopify-swatch-slider-track::-webkit-scrollbar {
+  height: 4px !important;
 }
 
-.shopify-swatch-dot.is-active {
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #0f172a;
-  transform: scale(1.08);
+.shopify-swatch-slider-track::-webkit-scrollbar-thumb {
+  background: #cbd5e1 !important;
+  border-radius: 99px !important;
+}
+
+/* Shopify Square Swatch Box */
+.shopify-square-swatch {
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  min-height: 38px !important;
+  border-radius: 8px !important; /* Square box with rounded corners */
+  border: 1.5px solid rgba(0, 0, 0, 0.15) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
+  flex-shrink: 0 !important;
+  transition: all 160ms ease !important;
+  outline: none !important;
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.shopify-square-swatch:hover {
+  transform: translateY(-2px) scale(1.06) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16) !important;
+  z-index: 2 !important;
+}
+
+.shopify-square-swatch.is-selected {
+  box-shadow: 0 0 0 2.5px #ffffff, 0 0 0 5px #0f172a !important;
+  transform: scale(1.05) !important;
+  z-index: 3 !important;
 }
 
 .shopify-size-box {
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #1e293b;
-  background: #ffffff;
-  border: 1.5px solid #cbd5e1;
-  border-radius: 8px;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: all 140ms ease;
+  padding: 8px 16px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #1e293b !important;
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  transition: all 140ms ease !important;
+}
+
+.shopify-size-box:hover {
+  border-color: #0f172a !important;
+  background: #f8fafc !important;
+}
+
+.shopify-size-box.is-active {
+  background: #0f172a !important;
+  color: #ffffff !important;
+  border-color: #0f172a !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15) !important;
 }
 
 .shopify-size-box:hover {

@@ -1960,6 +1960,71 @@ body * {
   }
 }
 
+/* Shopify-Grade Square Color Swatch Slider Track with Clear Gaps */
+.shopify-swatch-slider-container {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  margin-top: 8px !important;
+}
+
+.shopify-swatch-slider-track {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important; /* Visible spacing between each color box like Shopify */
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-behavior: smooth !important;
+  padding: 6px 4px 10px 4px !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #cbd5e1 transparent !important;
+  -webkit-overflow-scrolling: touch !important;
+  width: 100% !important;
+}
+
+.shopify-swatch-slider-track::-webkit-scrollbar {
+  height: 4px !important;
+}
+
+.shopify-swatch-slider-track::-webkit-scrollbar-thumb {
+  background: #cbd5e1 !important;
+  border-radius: 99px !important;
+}
+
+/* Shopify Square Swatch Box */
+.shopify-square-swatch {
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  min-height: 38px !important;
+  border-radius: 8px !important; /* Square box with rounded corners */
+  border: 1.5px solid rgba(0, 0, 0, 0.15) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
+  flex-shrink: 0 !important;
+  transition: all 160ms ease !important;
+  outline: none !important;
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.shopify-square-swatch:hover {
+  transform: translateY(-2px) scale(1.06) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16) !important;
+  z-index: 2 !important;
+}
+
+.shopify-square-swatch.is-selected {
+  box-shadow: 0 0 0 2.5px #ffffff, 0 0 0 5px #0f172a !important;
+  transform: scale(1.05) !important;
+  z-index: 3 !important;
+}
+
 .drawer-heading,
 .drawer-totals {
   display: flex;
