@@ -3,6 +3,7 @@ import { HelpCircle, MapPin, PackageCheck, ShieldCheck, Sparkles, Star, Tag, Tru
 import { ProductGrid } from "@/components/product-grid";
 import { ProductPurchasePanel } from "@/components/product-purchase-panel";
 import { ProductGallery } from "@/components/product-gallery";
+import { ProductReviews } from "@/components/product-reviews";
 import { StickyBuyBar } from "@/components/sticky-buy-bar";
 import { getProduct, getRelatedProducts, getYoastHead } from "@/lib/wp";
 import { cleanDescriptionHtml, decodeHtml, formatPrice, stripHtml, yoastToMetadata } from "@/lib/utils";
@@ -158,6 +159,9 @@ export default async function ProductPage({ params }) {
           </div>
         </aside>
       </section>
+
+      {/* Real WooCommerce Product Reviews Section */}
+      <ProductReviews product={product} />
 
       {/* Floating Sticky Purchase Bar on Scroll */}
       <StickyBuyBar product={product} />
