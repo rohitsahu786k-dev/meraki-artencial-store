@@ -77,10 +77,12 @@ export default async function ProductPage({ params }) {
         <aside className="product-summary">
           <div className="pdp-top-brand-strip">
             <span className="eyebrow">{categoryTitle}</span>
-            <div className="pdp-rating-pill">
-              <Star size={12} className="fill-amber-400 text-amber-400" />
-              <span>4.9 (48 Reviews)</span>
-            </div>
+            {Number(product.average_rating) > 0 ? (
+              <div className="pdp-rating-pill">
+                <Star size={12} className="fill-amber-400 text-amber-400" />
+                <span>{Number(product.average_rating).toFixed(1)} ({product.review_count} Review{product.review_count !== 1 ? "s" : ""})</span>
+              </div>
+            ) : null}
           </div>
 
           <h1 className="pdp-main-title">{productTitle}</h1>

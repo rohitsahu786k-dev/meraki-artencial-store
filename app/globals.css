@@ -3942,3 +3942,76 @@ html, body { max-width: 100%; overflow-x: clip; }
   .card-variants { min-height: 30px; gap: 4px; }
   .card-variants button { min-width: 29px; height: 27px; padding-inline: 7px; font-size: 9px; }
 }
+
+/* -------------------------------------------------------
+   REVIEWS: missing utility classes
+   ------------------------------------------------------- */
+.write-review-trigger-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: #f8fafc !important;
+  border: 1.5px solid #e2e8f0 !important;
+  border-radius: 99px !important;
+  padding: 8px 18px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  cursor: pointer !important;
+  transition: background 140ms, border-color 140ms !important;
+  white-space: nowrap !important;
+}
+
+.write-review-trigger-btn:hover {
+  background: #f1f5f9 !important;
+  border-color: #0f172a !important;
+}
+
+.no-reviews-box {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  padding: 40px 20px !important;
+  text-align: center !important;
+  border: 1.5px dashed #e2e8f0 !important;
+  border-radius: 14px !important;
+  color: #64748b !important;
+  font-size: 14px !important;
+}
+
+.reviews-loading {
+  text-align: center !important;
+  padding: 32px !important;
+  color: #94a3b8 !important;
+  font-size: 13px !important;
+}
+
+.submit-review-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  background: #0f172a !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 12px 28px !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  transition: background 140ms, opacity 140ms !important;
+  width: 100% !important;
+  margin-top: 4px !important;
+}
+
+.submit-review-btn:hover {
+  background: #1e293b !important;
+}
+
+.submit-review-btn:disabled {
+  opacity: 0.55 !important;
+  cursor: not-allowed !important;
+}
+

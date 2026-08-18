@@ -1,34 +1,5 @@
 /* Mobile commerce corrections. Loaded last to override legacy responsive rules. */
 
-/* PDP image: no card chrome, only 10px breathing space. */
-.product-gallery,
-.product-gallery .gallery-main {
-  margin: 0 !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  background: #fff !important;
-}
-
-.product-gallery .gallery-main {
-  box-sizing: border-box !important;
-  padding: 10px !important;
-}
-
-.product-gallery .gallery-primary-img {
-  inset: 10px !important;
-  width: calc(100% - 20px) !important;
-  height: calc(100% - 20px) !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  object-fit: cover !important;
-  object-position: center !important;
-  background: transparent !important;
-}
-
 /* Filter drawer must be above sticky header so title + X are always visible. */
 .filter-drawer {
   z-index: 2200 !important;

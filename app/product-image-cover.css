@@ -1,15 +1,14 @@
-/* Product detail gallery images should fill the full visual frame. */
+/* Product gallery image: proper containment, no overflow. */
 .product-gallery .gallery-primary-img {
+  position: absolute !important;
+  inset: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  object-fit: cover !important;
+  object-fit: contain !important;
   object-position: center center !important;
-  background: transparent !important;
-}
-
-@media (max-width: 767px) {
-  .product-gallery .gallery-primary-img {
-    object-fit: cover !important;
-    object-position: center center !important;
-  }
+  padding: 12px !important;
+  background: #ffffff !important;
+  /* Never overflow */
+  max-width: 100% !important;
+  max-height: 100% !important;
 }

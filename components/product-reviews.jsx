@@ -1,7 +1,55 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckCircle2, MessageSquare, Send, Star, ThumbsUp, UserCheck } from "lucide-react";
+import { CheckCircle2, ChevronDown, ChevronUp, MessageSquare, Send, Star, UserCheck } from "lucide-react";
+
+function StarDisplay({ rating, size = 14 }) {
+  return (
+    <span className="rev-stars-row" style={{ display: "flex", gap: 2 }}>
+      {[1, 2, 3, 4, 5].map((s) => (
+        <Star
+          key={s}
+          size={size}
+          style={{
+            fill: s <= Math.round(Number(rating)) ? "#fbbf24" : "none",
+            color: s <= Math.round(Number(rating)) ? "#fbbf24" : "#cbd5e1",
+          }}
+        />
+      ))}
+    </span>
+  );
+}
+
+function StarPicker({ value, onChange }) {
+  const [hover, setHover] = useState(0);
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+      {[1, 2, 3, 4, 5].map((s) => (
+        <button
+          key={s}
+          type="button"
+          aria-label={`Rate ${s} star`}
+          onMouseEnter={() => setHover(s)}
+          onMouseLeave={() => setHover(0)}
+          onClick={() => onChange(s)}
+          style={{ background: "none", border: "none", padding: 2, cursor: "pointer" }}
+        >
+          <Star
+            size={26}
+            style={{
+              fill: s <= (hover || value) ? "#fbbf24" : "none",
+              color: s <= (hover || value) ? "#fbbf24" : "#cbd5e1",
+              transition: "all 120ms",
+            }}
+          />
+        </button>
+      ))}
+      <span style={{ marginLeft: 8, fontSize: 13, fontWeight: 600, color: "#334155" }}>
+        {["", "Poor", "Fair", "Good", "Very Good", "Excellent"][hover || value] || "Select rating"}
+      </span>
+    </div>
+  );
+}
 
 export function ProductReviews({ product }) {
   const [reviews, setReviews] = useState([]);
@@ -10,32 +58,20 @@ export function ProductReviews({ product }) {
   const [submitting, setSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [form, setForm] = useState({ name: "", email: "", rating: 0, review: "" });
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    rating: 5,
-    review: "",
-  });
-
-  const productId = product.id;
+  const productId = product?.id;
+  const productAvgRating = Number(product?.average_rating || 0);
+  const productReviewCount = Number(product?.review_count || 0);
 
   useEffect(() => {
-    async function fetchReviews() {
-      try {
-        setLoading(true);
-        const res = await fetch(`/api/reviews?productId=${productId}`);
-        if (res.ok) {
-          const data = await res.json();
-          setReviews(data.reviews || []);
-        }
-      } catch (err) {
-        console.error("Failed to fetch reviews", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    if (productId) fetchReviews();
+    if (!productId) return;
+    setLoading(true);
+    fetch(`/api/reviews?productId=${productId}`)
+      .then((r) => r.json())
+      .then((data) => setReviews(data.reviews || []))
+      .catch(() => setReviews([]))
+      .finally(() => setLoading(false));
   }, [productId]);
 
   async function handleSubmit(e) {
@@ -43,32 +79,30 @@ export function ProductReviews({ product }) {
     setErrorMsg("");
     setSuccessMsg("");
 
-    if (!form.name.trim() || !form.email.trim() || !form.review.trim()) {
-      setErrorMsg("Please fill in your name, email and review text.");
-      return;
-    }
+    if (!form.name.trim()) { setErrorMsg("Please enter your name."); return; }
+    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) { setErrorMsg("Please enter a valid email address."); return; }
+    if (!form.rating) { setErrorMsg("Please select a star rating."); return; }
+    if (!form.review.trim() || form.review.trim().length < 10) { setErrorMsg("Please write at least 10 characters in your review."); return; }
 
+    setSubmitting(true);
     try {
-      setSubmitting(true);
       const res = await fetch("/api/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           productId,
-          name: form.name,
-          email: form.email,
+          name: form.name.trim(),
+          email: form.email.trim(),
           rating: form.rating,
-          review: form.review,
+          review: form.review.trim(),
         }),
       });
-
       const data = await res.json();
       if (res.ok && data.success) {
-        setSuccessMsg("Thank you! Your verified review has been submitted successfully.");
-        setForm({ name: "", email: "", rating: 5, review: "" });
+        setSuccessMsg("Your review has been submitted! It will appear after moderation.");
+        setForm({ name: "", email: "", rating: 0, review: "" });
         setFormOpen(false);
-
-        // Append new review locally
+        // Optimistically add review to list
         setReviews((prev) => [
           {
             id: Date.now(),
@@ -76,74 +110,77 @@ export function ProductReviews({ product }) {
             rating: form.rating,
             review: form.review,
             date_created: new Date().toISOString(),
-            verified: true,
+            verified: false,
+            pending: true,
           },
           ...prev,
         ]);
       } else {
-        setErrorMsg(data.error || "Failed to submit review. Please try again.");
+        setErrorMsg(data.error || "Failed to submit. Please try again later.");
       }
-    } catch (err) {
-      setErrorMsg("Network error submitting review.");
+    } catch {
+      setErrorMsg("Network error. Please check your connection and try again.");
     } finally {
       setSubmitting(false);
     }
   }
 
-  // Calculate Rating Metrics
-  const totalCount = reviews.length;
-  const avgRating = totalCount > 0
-    ? (reviews.reduce((sum, r) => sum + Number(r.rating || 5), 0) / totalCount).toFixed(1)
-    : "4.9";
+  // Compute metrics
+  const reviewsWithRating = reviews.filter((r) => Number(r.rating) > 0);
+  const displayAvg = reviewsWithRating.length > 0
+    ? (reviewsWithRating.reduce((s, r) => s + Number(r.rating), 0) / reviewsWithRating.length).toFixed(1)
+    : productAvgRating > 0 ? productAvgRating.toFixed(1) : null;
+
+  const displayCount = reviews.length || productReviewCount;
 
   const ratingCounts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-  reviews.forEach((r) => {
-    const star = Math.min(5, Math.max(1, Math.round(Number(r.rating || 5))));
-    ratingCounts[star] = (ratingCounts[star] || 0) + 1;
+  reviewsWithRating.forEach((r) => {
+    const s = Math.min(5, Math.max(1, Math.round(Number(r.rating))));
+    ratingCounts[s] = (ratingCounts[s] || 0) + 1;
   });
 
   return (
     <section className="product-reviews-section" id="customer-reviews">
+      {/* Header */}
       <div className="reviews-header-block">
         <div>
-          <span className="eyebrow">VERIFIED ARTISAN REVIEWS</span>
-          <h2>Customer Feedback & Reviews</h2>
+          <span className="eyebrow">CUSTOMER REVIEWS</span>
+          <h2>What Buyers Say</h2>
         </div>
         <button
           type="button"
-          className="button secondary write-review-trigger-btn"
-          onClick={() => setFormOpen(!formOpen)}
+          className="write-review-trigger-btn"
+          onClick={() => setFormOpen((v) => !v)}
         >
-          <MessageSquare size={16} />
-          <span>{formOpen ? "Close Review Form" : "Write a Review"}</span>
+          <MessageSquare size={15} />
+          <span>{formOpen ? "Close" : "Write a Review"}</span>
+          {formOpen ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
         </button>
       </div>
 
-      {/* Rating Summary Grid */}
+      {/* Alerts */}
+      {successMsg && <div className="review-alert success">{successMsg}</div>}
+      {errorMsg && <div className="review-alert error">{errorMsg}</div>}
+
+      {/* Rating Summary */}
       <div className="reviews-summary-card">
         <div className="rating-score-box">
-          <div className="score-number">{avgRating}</div>
-          <div className="score-stars">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Star
-                key={star}
-                size={18}
-                className={star <= Math.round(Number(avgRating)) ? "fill-amber-400 text-amber-400" : "text-slate-300"}
-              />
-            ))}
-          </div>
-          <small className="score-note">Based on {totalCount > 0 ? totalCount : 48} verified buyer ratings</small>
+          <div className="score-number">{displayAvg || "—"}</div>
+          {displayAvg && <StarDisplay rating={parseFloat(displayAvg)} size={20} />}
+          <small className="score-note">
+            {displayCount > 0 ? `Based on ${displayCount} review${displayCount !== 1 ? "s" : ""}` : "No reviews yet"}
+          </small>
         </div>
 
         <div className="rating-bars-box">
           {[5, 4, 3, 2, 1].map((star) => {
-            const count = totalCount > 0 ? (ratingCounts[star] || 0) : (star === 5 ? 42 : star === 4 ? 6 : 0);
-            const percent = totalCount > 0 ? (count / totalCount) * 100 : (star === 5 ? 88 : star === 4 ? 12 : 0);
+            const count = ratingCounts[star] || 0;
+            const pct = reviewsWithRating.length > 0 ? (count / reviewsWithRating.length) * 100 : 0;
             return (
               <div className="rating-bar-row" key={star}>
-                <span className="bar-label">{star} ★</span>
+                <span className="bar-label">{star}★</span>
                 <div className="bar-track">
-                  <div className="bar-fill" style={{ width: `${percent}%` }} />
+                  <div className="bar-fill" style={{ width: `${pct}%` }} />
                 </div>
                 <span className="bar-count">{count}</span>
               </div>
@@ -152,35 +189,20 @@ export function ProductReviews({ product }) {
         </div>
       </div>
 
-      {successMsg ? <div className="review-alert success">{successMsg}</div> : null}
-      {errorMsg ? <div className="review-alert error">{errorMsg}</div> : null}
-
-      {/* Review Submission Form Drawer */}
+      {/* Write Review Form */}
       {formOpen && (
-        <form onSubmit={handleSubmit} className="review-form-card">
-          <h3>Write Your Product Review</h3>
-          <p className="form-subtitle">Share your experience with fellow crafters and artisans.</p>
+        <form onSubmit={handleSubmit} className="review-form-card" noValidate>
+          <h3>Share Your Experience</h3>
+          <p className="form-subtitle">Help other crafters by sharing what you think about this product.</p>
 
-          <div className="form-rating-selector">
-            <label>Overall Rating:</label>
-            <div className="star-picker">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <button
-                  type="button"
-                  key={star}
-                  className={`star-pick-btn ${star <= form.rating ? "active" : ""}`}
-                  onClick={() => setForm({ ...form, rating: star })}
-                >
-                  <Star size={22} className={star <= form.rating ? "fill-amber-400 text-amber-400" : "text-slate-300"} />
-                </button>
-              ))}
-              <strong className="star-rating-val">{form.rating} out of 5 Stars</strong>
-            </div>
+          <div className="form-field">
+            <label>Your Rating *</label>
+            <StarPicker value={form.rating} onChange={(v) => setForm({ ...form, rating: v })} />
           </div>
 
           <div className="form-grid-two">
             <div className="form-field">
-              <label htmlFor="rev-name">Your Full Name *</label>
+              <label htmlFor="rev-name">Full Name *</label>
               <input
                 id="rev-name"
                 type="text"
@@ -191,33 +213,36 @@ export function ProductReviews({ product }) {
               />
             </div>
             <div className="form-field">
-              <label htmlFor="rev-email">Your Email Address *</label>
+              <label htmlFor="rev-email">Email Address *</label>
               <input
                 id="rev-email"
                 type="email"
                 required
-                placeholder="e.g. priya@example.com"
+                placeholder="priya@example.com"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
+              <small style={{ fontSize: 11, color: "#94a3b8" }}>Not shown publicly</small>
             </div>
           </div>
 
           <div className="form-field">
-            <label htmlFor="rev-text">Your Review *</label>
+            <label htmlFor="rev-text">Your Review * <span style={{ fontWeight: 400, color: "#94a3b8" }}>(min. 10 characters)</span></label>
             <textarea
               id="rev-text"
               rows={4}
               required
-              placeholder="What did you like about the product quality, finish, or delivery speed?"
+              minLength={10}
+              placeholder="What did you love about the quality, packaging, or delivery speed?"
               value={form.review}
               onChange={(e) => setForm({ ...form, review: e.target.value })}
             />
+            <small style={{ fontSize: 11, color: "#94a3b8" }}>{form.review.length} / 10 characters minimum</small>
           </div>
 
-          <button type="submit" className="button submit-review-btn" disabled={submitting}>
-            <Send size={16} />
-            <span>{submitting ? "Submitting Review..." : "Submit Review to Store"}</span>
+          <button type="submit" className="submit-review-btn" disabled={submitting}>
+            <Send size={15} />
+            <span>{submitting ? "Submitting..." : "Submit Review"}</span>
           </button>
         </form>
       )}
@@ -225,47 +250,46 @@ export function ProductReviews({ product }) {
       {/* Reviews List */}
       <div className="reviews-list-container">
         {loading ? (
-          <div className="reviews-loading">Loading customer reviews from WooCommerce...</div>
+          <div className="reviews-loading">Loading reviews...</div>
         ) : reviews.length > 0 ? (
           reviews.map((rev) => (
             <div className="review-card-item" key={rev.id}>
               <div className="review-card-top">
                 <div className="reviewer-profile">
-                  <div className="reviewer-avatar">{rev.reviewer.charAt(0).toUpperCase()}</div>
+                  <div className="reviewer-avatar" aria-hidden="true">
+                    {(rev.reviewer || "A").charAt(0).toUpperCase()}
+                  </div>
                   <div className="reviewer-info">
                     <strong className="reviewer-name">{rev.reviewer}</strong>
                     <span className="verified-badge">
-                      <CheckCircle2 size={12} className="text-emerald-600" />
-                      Verified Buyer
+                      <CheckCircle2 size={11} />
+                      {rev.pending ? "Pending Moderation" : "Verified Buyer"}
                     </span>
                   </div>
                 </div>
                 <span className="review-date">
                   {new Date(rev.date_created).toLocaleDateString("en-IN", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
+                    month: "short", day: "numeric", year: "numeric",
                   })}
                 </span>
               </div>
 
-              <div className="review-stars-row">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    size={14}
-                    className={star <= rev.rating ? "fill-amber-400 text-amber-400" : "text-slate-300"}
-                  />
-                ))}
-              </div>
+              {Number(rev.rating) > 0 && (
+                <div style={{ marginBottom: 8 }}>
+                  <StarDisplay rating={rev.rating} size={13} />
+                </div>
+              )}
 
               <p className="review-text">{rev.review}</p>
             </div>
           ))
         ) : (
           <div className="no-reviews-box">
-            <UserCheck size={28} className="text-slate-400" />
-            <p>Be the first verified customer to write a review for {product.name}!</p>
+            <UserCheck size={26} style={{ color: "#cbd5e1" }} />
+            <p>Be the first to review <strong>{product?.name}</strong></p>
+            <button type="button" className="write-review-trigger-btn" onClick={() => setFormOpen(true)}>
+              <MessageSquare size={14} /> Write a Review
+            </button>
           </div>
         )}
       </div>
