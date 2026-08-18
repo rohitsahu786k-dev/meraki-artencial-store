@@ -1414,53 +1414,55 @@ html, body, main {
 }
 
 .card-swatches-slider-track {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 4px 2px 6px;
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  padding: 4px 2px 8px 2px !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #cbd5e1 transparent !important;
+  -webkit-overflow-scrolling: touch !important;
+  scroll-behavior: smooth !important;
+  width: 100% !important;
 }
 
 .card-swatches-slider-track::-webkit-scrollbar {
-  height: 3px;
+  height: 3px !important;
 }
 
 .card-swatches-slider-track::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 99px;
+  background: #cbd5e1 !important;
+  border-radius: 99px !important;
 }
 
-/* Card Swatch Circle Dot */
-.card-swatch-dot {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 1.5px solid transparent;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
-  flex-shrink: 0;
-  transition: transform 150ms ease, box-shadow 150ms ease;
-  position: relative;
-  outline: none;
-  padding: 0;
+/* Card Mini Square Swatch Box */
+.card-square-swatch {
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  min-height: 22px !important;
+  border-radius: 5px !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  display: inline-block !important;
+  cursor: pointer !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  flex-shrink: 0 !important;
+  transition: all 140ms ease !important;
+  outline: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
-.card-swatch-dot:hover {
-  transform: scale(1.22);
-  z-index: 2;
+.card-square-swatch:hover {
+  transform: scale(1.18) !important;
+  z-index: 2 !important;
 }
 
-.card-swatch-dot.selected {
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #0f172a;
-  transform: scale(1.15);
+.card-square-swatch.selected {
+  box-shadow: 0 0 0 1.5px #ffffff, 0 0 0 3px #0f172a !important;
+  transform: scale(1.1) !important;
+  z-index: 3 !important;
 }
 
 /* Card Size Pill */

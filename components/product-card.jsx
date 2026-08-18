@@ -101,18 +101,16 @@ export function ProductCard({ product }) {
                     return (
                       <button
                         type="button"
-                        className={`card-swatch-dot ${isSelected ? "selected" : ""}`}
+                        className={`card-square-swatch ${isSelected ? "selected" : ""}`}
                         style={{
                           background: swatch.background,
                           borderColor: swatch.border,
                         }}
                         title={decodeHtml(term.name)}
                         aria-label={decodeHtml(term.name)}
-                        onClick={() => setSelected((current) => ({ ...current, [attribute.name]: term.slug }))}
+                        onClick={() => setSelected((current) => ({ ...current, [attribute.name]: term.slug || term.name }))}
                         key={term.slug || term.name}
-                      >
-                        {isSelected ? <Check size={10} color={swatch.textColor} strokeWidth={3} /> : null}
-                      </button>
+                      />
                     );
                   }
 
