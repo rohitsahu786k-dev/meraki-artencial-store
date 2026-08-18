@@ -5,7 +5,7 @@ import { ProductPurchasePanel } from "@/components/product-purchase-panel";
 import { ProductGallery } from "@/components/product-gallery";
 import { StickyBuyBar } from "@/components/sticky-buy-bar";
 import { getProduct, getRelatedProducts, getYoastHead } from "@/lib/wp";
-import { decodeHtml, formatPrice, stripHtml, yoastToMetadata } from "@/lib/utils";
+import { cleanDescriptionHtml, decodeHtml, formatPrice, stripHtml, yoastToMetadata } from "@/lib/utils";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -91,7 +91,7 @@ export default async function ProductPage({ params }) {
             {product.sku ? <span className="sku-tag">SKU: {product.sku}</span> : null}
           </div>
 
-          {product.short_description ? <div className="content pdp-intro" dangerouslySetInnerHTML={{ __html: product.short_description }} /> : null}
+          {product.short_description ? <div className="content pdp-intro" dangerouslySetInnerHTML={{ __html: cleanDescriptionHtml(product.short_description) }} /> : null}
 
           <ProductPurchasePanel product={product} />
 
@@ -141,7 +141,7 @@ export default async function ProductPage({ params }) {
           <div className="pdp-accordions">
             <details open>
               <summary>Product Specifications & Description</summary>
-              <div className="content" dangerouslySetInnerHTML={{ __html: product.description || product.short_description }} />
+              <div className="content" dangerouslySetInnerHTML={{ __html: cleanDescriptionHtml(product.description || product.short_description) }} />
             </details>
             <details>
               <summary>Shipping, Dispatch & Returns Policy</summary>

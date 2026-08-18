@@ -2242,12 +2242,7 @@ body * {
 
 @media (max-width: 768px) {
   .sticky-buy-bar {
-    bottom: 56px !important; /* Position above MobileBottomNav */
-    padding: 8px 12px !important;
-    z-index: 995 !important;
-  }
-  .sticky-buy-title {
-    max-width: 140px !important;
+    display: none !important;
   }
   .pdp-main-title {
     font-size: 24px !important;
