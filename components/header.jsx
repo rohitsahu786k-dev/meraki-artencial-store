@@ -28,7 +28,18 @@ export async function Header() {
 
   return (
     <header className="site-header">
-      <div className="top-strip"><div className="container"><Link href={announcement.href || "/shop"}>{announcement.text}</Link></div></div>
+      <div className="top-strip">
+        <div className="container">
+          <Link href={announcement.href || "/shop"} className="top-strip-link">
+            <span>{announcement.text}</span>
+            {announcement.coupon ? (
+              <span className="top-strip-coupon">
+                USE CODE: <strong>{announcement.coupon}</strong>
+              </span>
+            ) : null}
+          </Link>
+        </div>
+      </div>
       <div className="container nav-row">
         <HeaderTools menu={menu} categories={featuredCategories} />
         <Link className="brand" href="/">

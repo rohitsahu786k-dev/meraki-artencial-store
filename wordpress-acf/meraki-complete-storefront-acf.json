@@ -1,0 +1,199 @@
+[
+  {
+    "key": "group_meraki_banner_details",
+    "title": "Banner Images & Settings",
+    "fields": [
+      {
+        "key": "field_meraki_banner_desktop",
+        "label": "Desktop Banner Image",
+        "name": "desktop_image",
+        "type": "image",
+        "instructions": "Recommended: 1920x600px or 1600x500px (JPG/WebP/PNG)",
+        "required": 1,
+        "return_format": "url",
+        "preview_size": "medium",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_mobile",
+        "label": "Mobile Phone Banner Image",
+        "name": "mobile_image",
+        "type": "image",
+        "instructions": "Recommended: 800x800px or 1080x1350px (Optional: falls back to Desktop Image if empty)",
+        "required": 0,
+        "return_format": "url",
+        "preview_size": "medium",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_link",
+        "label": "Banner Click Link",
+        "name": "link",
+        "type": "text",
+        "instructions": "Where should clicking this banner navigate? (e.g. /shop, /category/bezels, https://...)",
+        "required": 0,
+        "default_value": "/shop",
+        "placeholder": "/shop",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_subtitle",
+        "label": "Banner Subtitle / Promotional Tag",
+        "name": "subtitle",
+        "type": "text",
+        "instructions": "Short promotional text (optional)",
+        "required": 0,
+        "placeholder": "e.g. Up to 30% OFF on Korean Jewellery",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_active",
+        "label": "Active / Show on Storefront",
+        "name": "is_active",
+        "type": "true_false",
+        "required": 0,
+        "default_value": 1,
+        "ui": 1,
+        "show_in_rest": 1
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "post_type",
+          "operator": "==",
+          "value": "meraki_banner"
+        }
+      ],
+      [
+        {
+          "param": "post_type",
+          "operator": "==",
+          "value": "page"
+        }
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "active": true,
+    "show_in_rest": 1
+  },
+  {
+    "key": "group_meraki_storefront_settings",
+    "title": "Storefront Announcements, Offers & Contact Details",
+    "fields": [
+      {
+        "key": "field_meraki_top_announcement",
+        "label": "Top Announcement Bar Text",
+        "name": "top_announcement",
+        "type": "text",
+        "instructions": "Header top notification bar message",
+        "required": 0,
+        "default_value": "MINIMUM ORDER RS. 300 | SECURE NIMBBL CHECKOUT | PAN INDIA DELIVERY",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_announcement_link",
+        "label": "Announcement Click Link",
+        "name": "announcement_link",
+        "type": "text",
+        "instructions": "Link when clicking top announcement bar",
+        "required": 0,
+        "default_value": "/shop?on_sale=true",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_marquee_text",
+        "label": "Homepage Scrolling Ribbon Text",
+        "name": "marquee_text",
+        "type": "text",
+        "instructions": "Scrolling text ticker below the hero carousel",
+        "required": 0,
+        "default_value": "MINIMUM ORDER RS. 300 | FREE SHIPPING ON ORDERS ABOVE RS. 3,000 | 100% AUTHENTIC RESIN ART MATERIALS",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_active_coupon",
+        "label": "Featured Offer / Coupon Code",
+        "name": "active_coupon_code",
+        "type": "text",
+        "instructions": "Highlighted discount code in header/announcement",
+        "required": 0,
+        "placeholder": "e.g. MERAKI10",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_whatsapp_number",
+        "label": "WhatsApp Number (with Country Code)",
+        "name": "whatsapp_number",
+        "type": "text",
+        "instructions": "e.g. 917426915251 (used for WhatsApp 1-click chat button)",
+        "required": 0,
+        "default_value": "917426915251",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_whatsapp_message",
+        "label": "WhatsApp Default Greeting Message",
+        "name": "whatsapp_greeting",
+        "type": "text",
+        "instructions": "Default message for WhatsApp chat",
+        "required": 0,
+        "default_value": "Hello Meraki Artencial Store! I would like to inquire about your resin art materials and jewellery collection.",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_support_phone",
+        "label": "Customer Support Phone",
+        "name": "support_phone",
+        "type": "text",
+        "instructions": "Phone number shown in footer & contact page",
+        "required": 0,
+        "default_value": "+91 74269 15251",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_support_email",
+        "label": "Customer Support Email",
+        "name": "support_email",
+        "type": "email",
+        "instructions": "Support email shown in footer & contact page",
+        "required": 0,
+        "default_value": "merakiartstore@gmail.com",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_store_address",
+        "label": "Store Location & Address",
+        "name": "store_address",
+        "type": "text",
+        "instructions": "Store address for footer & contact page",
+        "required": 0,
+        "default_value": "Udaipur, Rajasthan, India - 313001",
+        "show_in_rest": 1
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page_type",
+          "operator": "==",
+          "value": "front_page"
+        }
+      ],
+      [
+        {
+          "param": "page_template",
+          "operator": "==",
+          "value": "default"
+        }
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "active": true,
+    "show_in_rest": 1
+  }
+]
