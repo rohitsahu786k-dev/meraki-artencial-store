@@ -2151,6 +2151,131 @@ body * {
   z-index: 3 !important;
 }
 
+/* Sticky Mini Buy Bar (Shopify-Plus Standard) */
+.sticky-buy-bar {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 999 !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  border-top: 1px solid #e2e8f0 !important;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08) !important;
+  padding: 10px 16px !important;
+  animation: slideUpBar 220ms ease !important;
+}
+
+@keyframes slideUpBar {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.sticky-buy-container {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+}
+
+.sticky-buy-product {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-width: 0 !important;
+}
+
+.sticky-buy-thumb {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 8px !important;
+  object-fit: cover !important;
+  border: 1px solid #e2e8f0 !important;
+  background: #f8fafc !important;
+}
+
+.sticky-buy-info {
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 0 !important;
+}
+
+.sticky-buy-title {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 320px !important;
+}
+
+.sticky-buy-price {
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  color: #15803d !important;
+}
+
+.sticky-buy-btn {
+  background: #0f172a !important;
+  color: #ffffff !important;
+  border-radius: 99px !important;
+  padding: 8px 22px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  text-decoration: none !important;
+  transition: transform 140ms ease, background 140ms ease !important;
+}
+
+.sticky-buy-btn:hover {
+  background: #1e293b !important;
+  transform: translateY(-1px) !important;
+}
+
+.pdp-top-brand-strip {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  margin-bottom: 6px !important;
+}
+
+.pdp-rating-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  background: #fffbeb !important;
+  border: 1px solid #fef3c7 !important;
+  color: #b45309 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  padding: 2px 10px !important;
+  border-radius: 99px !important;
+}
+
+.pdp-main-title {
+  font-size: 32px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  color: #0f172a !important;
+  line-height: 1.15 !important;
+  margin-bottom: 10px !important;
+}
+
+@media (max-width: 640px) {
+  .sticky-buy-title {
+    max-width: 140px !important;
+  }
+  .pdp-main-title {
+    font-size: 24px !important;
+  }
+}
+
 .drawer-heading,
 .drawer-totals {
   display: flex;

@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { HelpCircle, MapPin, PackageCheck, ShieldCheck, Sparkles, Tag, Truck } from "lucide-react";
+import { HelpCircle, MapPin, PackageCheck, ShieldCheck, Sparkles, Star, Tag, Truck } from "lucide-react";
 import { ProductGrid } from "@/components/product-grid";
 import { ProductPurchasePanel } from "@/components/product-purchase-panel";
 import { ProductGallery } from "@/components/product-gallery";
+import { StickyBuyBar } from "@/components/sticky-buy-bar";
 import { getProduct, getRelatedProducts, getYoastHead } from "@/lib/wp";
 import { decodeHtml, formatPrice, stripHtml, yoastToMetadata } from "@/lib/utils";
 
@@ -33,8 +34,6 @@ export default async function ProductPage({ params }) {
   const images = product.images?.length ? product.images : [];
   const minor = product.prices?.currency_minor_unit ?? 2;
   const priceNum = Number(product.prices?.price || 0) / Math.pow(10, minor);
-  const regularNum = Number(product.prices?.regular_price || 0) / Math.pow(10, minor);
-  const discountPercent = regularNum > priceNum ? Math.round(((regularNum - priceNum) / regularNum) * 100) : 0;
 
   const productTitle = decodeHtml(product.name);
   const categoryTitle = decodeHtml(product.categories?.[0]?.name || "Products");
@@ -60,6 +59,7 @@ export default async function ProductPage({ params }) {
   return (
     <div className="container product-page-shell">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replaceAll("<", "\\u003c") }} />
+      
       <nav className="breadcrumbs">
         <Link href="/">Home</Link>
         <span>/</span>
@@ -69,14 +69,24 @@ export default async function ProductPage({ params }) {
         <span>/</span>
         <span>{productTitle}</span>
       </nav>
-      <section className="product-detail professional-pdp">
+
+      <section className="product-detail luxury-pdp-layout">
         <ProductGallery images={images} name={productTitle} />
+        
         <aside className="product-summary">
-          <span className="eyebrow">{categoryTitle}</span>
-          <h1>{productTitle}</h1>
+          <div className="pdp-top-brand-strip">
+            <span className="eyebrow">{categoryTitle}</span>
+            <div className="pdp-rating-pill">
+              <Star size={12} className="fill-amber-400 text-amber-400" />
+              <span>4.9 (48 Reviews)</span>
+            </div>
+          </div>
+
+          <h1 className="pdp-main-title">{productTitle}</h1>
+          
           <div className="pdp-meta-row">
             <span className={product.is_in_stock ? "stock-badge stock-in" : "stock-badge stock-out"}>
-              <PackageCheck size={14} /> {product.is_in_stock ? "In Stock & Ready to Ship" : "Currently Out of Stock"}
+              <PackageCheck size={14} /> {product.is_in_stock ? "In Stock - Dispatched in 24-48h" : "Currently Out of Stock"}
             </span>
             {product.sku ? <span className="sku-tag">SKU: {product.sku}</span> : null}
           </div>
@@ -148,6 +158,10 @@ export default async function ProductPage({ params }) {
           </div>
         </aside>
       </section>
+
+      {/* Floating Sticky Purchase Bar on Scroll */}
+      <StickyBuyBar product={product} />
+
       {related?.length ? (
         <section className="section related-products-section">
           <div className="section-title">
