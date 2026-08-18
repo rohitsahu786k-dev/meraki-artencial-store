@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Check, ChevronDown, ChevronLeft, ChevronRight, Grid2X2, Grid3X3, LayoutGrid, SlidersHorizontal, X } from "lucide-react";
 import { ProductCard } from "@/components/product-card";

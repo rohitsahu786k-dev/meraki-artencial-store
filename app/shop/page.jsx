@@ -14,9 +14,9 @@ export default async function ShopPage({ searchParams }) {
   const params = { per_page: "50", page: String(page), ...productQueryParams(query) };
 
   const [paginatedData, categories, attributes] = await Promise.all([
-    getPaginatedProducts(params),
-    getCategories(),
-    getProductAttributes(),
+    getPaginatedProducts(params).catch(() => ({ products: [], total: 0, totalPages: 1, page: 1, perPage: 50 })),
+    getCategories().catch(() => []),
+    getProductAttributes().catch(() => []),
   ]);
 
   return (

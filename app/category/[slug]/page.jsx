@@ -17,9 +17,15 @@ export default async function CategoryPage({ params, searchParams }) {
   const { slug } = await params;
   const query = await searchParams;
   const page = query?.page ? Number(query.page) : 1;
-  const [category, categories, attributes] = await Promise.all([getCategory(slug), getCategories(), getProductAttributes()]);
+  const [category, categories, attributes] = await Promise.all([
+    getCategory(slug).catch(() => null),
+    getCategories().catch(() => []),
+    getProductAttributes().catch(() => []),
+  ]);
   const productParams = { per_page: "50", page: String(page), ...productQueryParams(query) };
-  const paginatedData = category ? await getPaginatedProductsByCategory(category.id, productParams) : { products: [], total: 0, totalPages: 1, page: 1, perPage: 50 };
+  const paginatedData = category
+    ? await getPaginatedProductsByCategory(category.id, productParams).catch(() => ({ products: [], total: 0, totalPages: 1, page: 1, perPage: 50 }))
+    : { products: [], total: 0, totalPages: 1, page: 1, perPage: 50 };
 
   return (
     <>
