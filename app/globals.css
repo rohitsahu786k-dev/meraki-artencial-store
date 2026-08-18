@@ -2740,7 +2740,7 @@ body * {
   }
 
   .top-strip {
-    display: none;
+    display: block !important;
   }
 
   .nav-row {
@@ -2803,7 +2803,6 @@ body * {
     justify-content: center;
   }
 
-  .top-strip span:last-child,
   .nav-actions a:nth-child(2),
   .brand span:last-child {
     display: none;
