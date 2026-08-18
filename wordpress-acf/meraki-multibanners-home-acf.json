@@ -1,0 +1,333 @@
+[
+  {
+    "key": "group_meraki_multibanners_home",
+    "title": "Homepage Multi-Slider Banners (1 to 6)",
+    "fields": [
+      {
+        "key": "tab_meraki_banner_1",
+        "label": "Banner 1",
+        "type": "tab"
+      },
+      {
+        "key": "field_meraki_desktop_banner_1",
+        "label": "Banner 1: Desktop Image",
+        "name": "desktop_banner_1",
+        "type": "image",
+        "instructions": "Recommended size: 1920x600px or 1600x500px",
+        "return_format": "url",
+        "preview_size": "medium",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_mobile_banner_1",
+        "label": "Banner 1: Mobile Phone Image",
+        "name": "mobile_banner_1",
+        "type": "image",
+        "instructions": "Recommended size: 800x800px or 1080x1350px (Optional)",
+        "return_format": "url",
+        "preview_size": "medium",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_1_title",
+        "label": "Banner 1: Title / Alt Text",
+        "name": "banner_1_title",
+        "type": "text",
+        "placeholder": "e.g. Best Resin Art & Craft Material Store",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_1_link",
+        "label": "Banner 1: Click Link",
+        "name": "banner_1_link",
+        "type": "text",
+        "default_value": "/shop",
+        "placeholder": "/shop",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_1_active",
+        "label": "Banner 1: Active / Show on Website",
+        "name": "banner_1_active",
+        "type": "true_false",
+        "default_value": 1,
+        "ui": 1,
+        "show_in_rest": 1
+      },
+
+      {
+        "key": "tab_meraki_banner_2",
+        "label": "Banner 2",
+        "type": "tab"
+      },
+      {
+        "key": "field_meraki_desktop_banner_2",
+        "label": "Banner 2: Desktop Image",
+        "name": "desktop_banner_2",
+        "type": "image",
+        "instructions": "Recommended size: 1920x600px or 1600x500px",
+        "return_format": "url",
+        "preview_size": "medium",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_mobile_banner_2",
+        "label": "Banner 2: Mobile Phone Image",
+        "name": "mobile_banner_2",
+        "type": "image",
+        "instructions": "Recommended size: 800x800px or 1080x1350px (Optional)",
+        "return_format": "url",
+        "preview_size": "medium",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_2_title",
+        "label": "Banner 2: Title / Alt Text",
+        "name": "banner_2_title",
+        "type": "text",
+        "placeholder": "e.g. Korean Anti-Tarnish Jewellery",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_2_link",
+        "label": "Banner 2: Click Link",
+        "name": "banner_2_link",
+        "type": "text",
+        "default_value": "/category/bezels",
+        "placeholder": "/category/bezels",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_2_active",
+        "label": "Banner 2: Active / Show on Website",
+        "name": "banner_2_active",
+        "type": "true_false",
+        "default_value": 1,
+        "ui": 1,
+        "show_in_rest": 1
+      },
+
+      {
+        "key": "tab_meraki_banner_3",
+        "label": "Banner 3",
+        "type": "tab"
+      },
+      {
+        "key": "field_meraki_desktop_banner_3",
+        "label": "Banner 3: Desktop Image",
+        "name": "desktop_banner_3",
+        "type": "image",
+        "instructions": "Recommended size: 1920x600px or 1600x500px",
+        "return_format": "url",
+        "preview_size": "medium",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_mobile_banner_3",
+        "label": "Banner 3: Mobile Phone Image",
+        "name": "mobile_banner_3",
+        "type": "image",
+        "instructions": "Recommended size: 800x800px or 1080x1350px (Optional)",
+        "return_format": "url",
+        "preview_size": "medium",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_3_title",
+        "label": "Banner 3: Title / Alt Text",
+        "name": "banner_3_title",
+        "type": "text",
+        "placeholder": "e.g. Silicone & Resin Molds",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_3_link",
+        "label": "Banner 3: Click Link",
+        "name": "banner_3_link",
+        "type": "text",
+        "default_value": "/category/silicone-and-resin-molds",
+        "placeholder": "/category/silicone-and-resin-molds",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_3_active",
+        "label": "Banner 3: Active / Show on Website",
+        "name": "banner_3_active",
+        "type": "true_false",
+        "default_value": 1,
+        "ui": 1,
+        "show_in_rest": 1
+      },
+
+      {
+        "key": "tab_meraki_banner_4",
+        "label": "Banner 4",
+        "type": "tab"
+      },
+      {
+        "key": "field_meraki_desktop_banner_4",
+        "label": "Banner 4: Desktop Image",
+        "name": "desktop_banner_4",
+        "type": "image",
+        "instructions": "Recommended size: 1920x600px or 1600x500px",
+        "return_format": "url",
+        "preview_size": "medium",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_mobile_banner_4",
+        "label": "Banner 4: Mobile Phone Image",
+        "name": "mobile_banner_4",
+        "type": "image",
+        "instructions": "Recommended size: 800x800px or 1080x1350px (Optional)",
+        "return_format": "url",
+        "preview_size": "medium",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_4_title",
+        "label": "Banner 4: Title / Alt Text",
+        "name": "banner_4_title",
+        "type": "text",
+        "placeholder": "e.g. Handcrafted Rings & Charms",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_4_link",
+        "label": "Banner 4: Click Link",
+        "name": "banner_4_link",
+        "type": "text",
+        "default_value": "/shop",
+        "placeholder": "/shop",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_4_active",
+        "label": "Banner 4: Active / Show on Website",
+        "name": "banner_4_active",
+        "type": "true_false",
+        "default_value": 1,
+        "ui": 1,
+        "show_in_rest": 1
+      },
+
+      {
+        "key": "tab_meraki_banner_5",
+        "label": "Banner 5",
+        "type": "tab"
+      },
+      {
+        "key": "field_meraki_desktop_banner_5",
+        "label": "Banner 5: Desktop Image",
+        "name": "desktop_banner_5",
+        "type": "image",
+        "return_format": "url",
+        "preview_size": "medium",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_mobile_banner_5",
+        "label": "Banner 5: Mobile Phone Image",
+        "name": "mobile_banner_5",
+        "type": "image",
+        "return_format": "url",
+        "preview_size": "medium",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_5_title",
+        "label": "Banner 5: Title / Alt Text",
+        "name": "banner_5_title",
+        "type": "text",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_5_link",
+        "label": "Banner 5: Click Link",
+        "name": "banner_5_link",
+        "type": "text",
+        "default_value": "/shop",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_5_active",
+        "label": "Banner 5: Active / Show on Website",
+        "name": "banner_5_active",
+        "type": "true_false",
+        "default_value": 1,
+        "ui": 1,
+        "show_in_rest": 1
+      },
+
+      {
+        "key": "tab_meraki_banner_6",
+        "label": "Banner 6",
+        "type": "tab"
+      },
+      {
+        "key": "field_meraki_desktop_banner_6",
+        "label": "Banner 6: Desktop Image",
+        "name": "desktop_banner_6",
+        "type": "image",
+        "return_format": "url",
+        "preview_size": "medium",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_mobile_banner_6",
+        "label": "Banner 6: Mobile Phone Image",
+        "name": "mobile_banner_6",
+        "type": "image",
+        "return_format": "url",
+        "preview_size": "medium",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_6_title",
+        "label": "Banner 6: Title / Alt Text",
+        "name": "banner_6_title",
+        "type": "text",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_6_link",
+        "label": "Banner 6: Click Link",
+        "name": "banner_6_link",
+        "type": "text",
+        "default_value": "/shop",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_6_active",
+        "label": "Banner 6: Active / Show on Website",
+        "name": "banner_6_active",
+        "type": "true_false",
+        "default_value": 1,
+        "ui": 1,
+        "show_in_rest": 1
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page_type",
+          "operator": "==",
+          "value": "front_page"
+        }
+      ],
+      [
+        {
+          "param": "page_template",
+          "operator": "==",
+          "value": "default"
+        }
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "active": true,
+    "show_in_rest": 1
+  }
+]
