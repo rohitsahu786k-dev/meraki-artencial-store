@@ -1,13 +1,15 @@
 const WP_URL = process.env.NEXT_PUBLIC_WP_URL || "https://merakiartencialstore.com";
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, "");
 
-async function all(endpoint, perPage = 100, maxPages = 30) {
+async function all(endpoint, perPage = 100, maxPages = 3) {
   const rows = [];
   for (let page = 1; page <= maxPages; page += 1) {
     const join = endpoint.includes("?") ? "&" : "?";
     const response = await fetch(`${WP_URL}${endpoint}${join}per_page=${perPage}&page=${page}`, { next: { revalidate: 3600 } }).catch(() => null);
     if (!response?.ok) break;
-    const batch = await response.json(); rows.push(...batch);
+    const batch = await response.json().catch(() => []);
+    if (!Array.isArray(batch)) break;
+    rows.push(...batch);
     if (batch.length < perPage) break;
   }
   return rows;

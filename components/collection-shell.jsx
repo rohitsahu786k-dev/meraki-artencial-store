@@ -1,9 +1,11 @@
 import { CollectionBrowser } from "@/components/collection-browser";
 import { decodeHtml, stripHtml } from "@/lib/utils";
 
-export function CollectionShell({ title, description, products = [], categories = [], attributes = [], basePath = "/shop", activeQuery = {} }) {
+export function CollectionShell({ title, description, products = [], pagination, categories = [], attributes = [], basePath = "/shop", activeQuery = {} }) {
   const cleanTitle = decodeHtml(title);
   const cleanDesc = stripHtml(description || `Explore our complete range of ${cleanTitle} at Meraki Artencial Store.`);
+
+  const totalCount = pagination?.total || products.length;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -13,7 +15,7 @@ export function CollectionShell({ title, description, products = [], categories 
     url: typeof window !== "undefined" ? window.location.href : basePath,
     mainEntity: {
       "@type": "ItemList",
-      numberOfItems: products.length,
+      numberOfItems: totalCount,
       itemListElement: products.slice(0, 12).map((item, index) => ({
         "@type": "ListItem",
         position: index + 1,
@@ -34,7 +36,7 @@ export function CollectionShell({ title, description, products = [], categories 
             {description ? <p>{stripHtml(description).slice(0, 220)}</p> : null}
           </div>
         </div>
-        <CollectionBrowser products={products} categories={categories} attributes={attributes} basePath={basePath} activeQuery={activeQuery} />
+        <CollectionBrowser products={products} pagination={pagination} categories={categories} attributes={attributes} basePath={basePath} activeQuery={activeQuery} />
 
         {/* Collection Bottom SEO Content Block */}
         <section className="collection-bottom-seo mt-12 pt-8 border-t border-slate-200">
