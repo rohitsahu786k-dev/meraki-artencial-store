@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { HelpCircle, MapPin, PackageCheck, ShieldCheck, Tag, Truck } from "lucide-react";
+import { HelpCircle, MapPin, PackageCheck, ShieldCheck, Sparkles, Tag, Truck } from "lucide-react";
 import { ProductGrid } from "@/components/product-grid";
 import { ProductPurchasePanel } from "@/components/product-purchase-panel";
 import { ProductGallery } from "@/components/product-gallery";
@@ -96,27 +96,46 @@ export default async function ProductPage({ params }) {
 
           <ProductPurchasePanel product={product} />
 
-          <div className="delivery-box">
-            <div>
-              <Truck size={17} />
-              <span>
-                <strong>Pan India Delivery</strong>
-                <small>Dispatched within 24-48 hours via premium couriers.</small>
-              </span>
+          {/* Shopify-Grade Trust & Service Guarantees Grid */}
+          <div className="shopify-trust-grid">
+            <div className="shopify-trust-card">
+              <div className="trust-icon-badge gold">
+                <Sparkles size={18} />
+              </div>
+              <div className="trust-content">
+                <strong>100% Quality Checked</strong>
+                <small>Studio inspected resin art & findings</small>
+              </div>
             </div>
-            <div>
-              <MapPin size={17} />
-              <span>
-                <strong>Live Inventory Sync</strong>
-                <small>Connected directly to WooCommerce WordPress backend.</small>
-              </span>
+
+            <div className="shopify-trust-card">
+              <div className="trust-icon-badge green">
+                <Truck size={18} />
+              </div>
+              <div className="trust-content">
+                <strong>Fast Pan-India Delivery</strong>
+                <small>Dispatched in 24-48h via top couriers</small>
+              </div>
             </div>
-            <div>
-              <ShieldCheck size={17} />
-              <span>
-                <strong>Secure Payment Guaranteed</strong>
-                <small>Protected checkout with Nimbbl, UPI, Cards, NetBanking.</small>
-              </span>
+
+            <div className="shopify-trust-card">
+              <div className="trust-icon-badge blue">
+                <ShieldCheck size={18} />
+              </div>
+              <div className="trust-content">
+                <strong>Secure Nimbbl Checkout</strong>
+                <small>Encrypted UPI, Cards & NetBanking</small>
+              </div>
+            </div>
+
+            <div className="shopify-trust-card">
+              <div className="trust-icon-badge purple">
+                <PackageCheck size={18} />
+              </div>
+              <div className="trust-content">
+                <strong>Safe Bubble Packaging</strong>
+                <small>Carefully packed from Udaipur Studio</small>
+              </div>
             </div>
           </div>
 

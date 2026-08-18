@@ -142,21 +142,6 @@ export function ProductPurchasePanel({ product }) {
       </div>
 
       <CouponOffers items={[{ product, quantity }]} compact />
-
-      <div className="pdp-trust-banner">
-        <div className="pdp-trust-item">
-          <span className="pdp-trust-icon">✨</span>
-          <span>100% Quality Checked</span>
-        </div>
-        <div className="pdp-trust-item">
-          <span className="pdp-trust-icon">🚚</span>
-          <span>Fast Pan-India Delivery</span>
-        </div>
-        <div className="pdp-trust-item">
-          <span className="pdp-trust-icon">🔒</span>
-          <span>Secure Nimbbl UPI / Card Checkout</span>
-        </div>
-      </div>
     </div>
   );
 }
