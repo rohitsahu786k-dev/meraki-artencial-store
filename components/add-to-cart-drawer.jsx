@@ -38,13 +38,16 @@ export function AddToCartDrawer({ product, compact = false, quantity: suppliedQu
 
   if (!compact) {
     return (
-      <div className="pdp-cart-actions">
-        {actionButton}
-        <button type="button" className="button secondary pdp-buy-now" onClick={buyOne} disabled={unavailable || needsOptions}>
-          <CreditCard size={17} />
-          <span>Buy now</span>
-        </button>
-      </div>
+      <button
+        type="button"
+        className="button add-cart-button"
+        onClick={addAndOpen}
+        disabled={unavailable || needsOptions}
+        aria-label={`${buttonLabel}: ${product.name}`}
+      >
+        <ShoppingBag size={18} />
+        <span>{buttonLabel}</span>
+      </button>
     );
   }
 

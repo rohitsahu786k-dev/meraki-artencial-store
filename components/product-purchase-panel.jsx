@@ -1,10 +1,11 @@
 "use client";
 
-import { Check, Minus, Plus, ShoppingBag, Tag } from "lucide-react";
+import { Check, Minus, Plus, ShoppingBag, Tag, Zap } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AddToCartDrawer } from "@/components/add-to-cart-drawer";
 import { WishlistButton } from "@/components/wishlist-button";
 import { CouponOffers } from "@/components/coupon-offers";
+import { createHandoffUrl } from "@/lib/cart-store";
 import { decodeHtml, formatPrice, getColorSwatch, isColorAttribute } from "@/lib/utils";
 
 function normalize(value = "") {
@@ -156,36 +157,54 @@ export function ProductPurchasePanel({ product }) {
         );
       })}
 
-      <div className="qty-row">
-        <div className="pdp-quantity">
-          <button
-            type="button"
-            onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            aria-label="Decrease quantity"
-            disabled={quantity <= 1}
-          >
-            <Minus size={15} />
-          </button>
-          <span>{quantity}</span>
-          <button
-            type="button"
-            onClick={() => setQuantity(quantity + 1)}
-            aria-label="Increase quantity"
-          >
-            <Plus size={15} />
-          </button>
+      <div className="pdp-purchase-actions-stack">
+        <div className="pdp-qty-wishlist-row">
+          <div className="pdp-quantity">
+            <button
+              type="button"
+              onClick={() => setQuantity(Math.max(1, quantity - 1))}
+              aria-label="Decrease quantity"
+              disabled={quantity <= 1}
+            >
+              <Minus size={15} />
+            </button>
+            <span>{quantity}</span>
+            <button
+              type="button"
+              onClick={() => setQuantity(quantity + 1)}
+              aria-label="Increase quantity"
+            >
+              <Plus size={15} />
+            </button>
+          </div>
+
+          <AddToCartDrawer
+            product={product}
+            addToCartUrl={addUrl}
+            buyNowUrl={buyUrl}
+            quantity={quantity}
+            cartMeta={{ variationId: variation?.id, attributes: cartAttributes }}
+            disabled={!ready || (product.has_options && !variation)}
+          />
+
+          <WishlistButton product={product} className="icon-button pdp-wishlist" />
         </div>
 
-        <AddToCartDrawer
-          product={product}
-          addToCartUrl={addUrl}
-          buyNowUrl={buyUrl}
-          quantity={quantity}
-          cartMeta={{ variationId: variation?.id, attributes: cartAttributes }}
-          disabled={!ready || (product.has_options && !variation)}
-        />
-
-        <WishlistButton product={product} className="icon-button pdp-wishlist" />
+        <div className="pdp-buy-now-full-row">
+          <button
+            type="button"
+            className="button pdp-buy-now-full"
+            onClick={() => {
+              if (!ready || (product.has_options && !variation)) return;
+              const item = { product, quantity, variationId: variation?.id || 0, variationAttributes: cartAttributes };
+              window.location.href = createHandoffUrl([item], "", "checkout");
+            }}
+            disabled={!ready || (product.has_options && !variation)}
+          >
+            <Zap size={17} />
+            <span>BUY IT NOW &bull; Instant Checkout</span>
+          </button>
+        </div>
       </div>
 
       <CouponOffers items={[{ product, quantity }]} compact />
