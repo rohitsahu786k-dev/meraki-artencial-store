@@ -35,8 +35,8 @@ export function CollectionBrowser({ products = [], pagination, categories = [], 
   const endIndex = Math.min(totalProducts, currentPage * perPage);
 
   const currentSort = activeQuery.orderby
-    ? `${Array.isArray(activeQuery.orderby) ? activeQuery.orderby[0] : activeQuery.orderby}:${Array.isArray(activeQuery.order) ? activeQuery.order[0] : (activeQuery.order || "desc")}`
-    : "date:desc";
+    ? `${Array.isArray(activeQuery.orderby) ? activeQuery.orderby[0] : activeQuery.orderby}:${Array.isArray(activeQuery.order) ? activeQuery.order[0] : (activeQuery.order || "asc")}`
+    : "menu_order:asc";
 
   function handleSortChange(e) {
     const val = e.target.value;
@@ -214,6 +214,7 @@ export function CollectionBrowser({ products = [], pagination, categories = [], 
               value={currentSort}
               onChange={handleSortChange}
             >
+              <option value="menu_order:asc">Sort by: Default (WordPress Order)</option>
               <option value="date:desc">Sort by: Newest Arrivals</option>
               <option value="popularity:desc">Sort by: Best Selling</option>
               <option value="price:asc">Sort by: Price (Low to High)</option>

@@ -7,7 +7,7 @@ import { SectionHeader } from "@/components/ui";
 import { InstagramFeed } from "@/components/instagram-feed";
 import { TextMarquee } from "@/components/text-marquee";
 import { getCategories, getFrontPage, getInstagramFeed, getPopularProducts, getProducts, getProductsByCategory, getTopCategoriesFromProducts } from "@/lib/wp";
-import { getManagedHeroBanners } from "@/lib/wp-storefront";
+import { getManagedHeroBanners, getMarqueeNotice } from "@/lib/wp-storefront";
 import { decodeHtml, yoastToMetadata } from "@/lib/utils";
 
 export async function generateMetadata() {
@@ -20,11 +20,12 @@ export async function generateMetadata() {
 
 export default async function Home({ searchParams }) {
   const query = await searchParams;
-  const [products, saleProducts, popularProducts, categories] = await Promise.all([
+  const [products, saleProducts, popularProducts, categories, marqueeNotice] = await Promise.all([
     getProducts({ per_page: "12", orderby: query?.search ? "relevance" : "date", search: query?.search || "" }),
     getProducts({ per_page: "8", on_sale: "true" }).catch(() => []),
     getPopularProducts(),
     getCategories(),
+    getMarqueeNotice(),
   ]);
   const [banners, instagramPosts] = await Promise.all([getManagedHeroBanners(products), getInstagramFeed()]);
   const countLeaders = categories.filter((category) => category.count > 0 && category.slug !== "uncategorized").sort((a, b) => b.count - a.count).slice(0, 12);
@@ -71,7 +72,7 @@ export default async function Home({ searchParams }) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <HeroCarousel banners={banners} />
-      <TextMarquee text="MINIMUM ORDER RS. 300 | SECURE NIMBBL CHECKOUT | PAN INDIA DELIVERY | 100% AUTHENTIC RESIN ART MATERIALS" />
+      <TextMarquee text={marqueeNotice} />
       <CategoryCarousel categories={enrichedCategories} />
       <section className="section home-category-section">
         <div className="container">
