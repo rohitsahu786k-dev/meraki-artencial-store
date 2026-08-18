@@ -63,13 +63,13 @@ export function ProductPurchasePanel({ product }) {
         const currentDisplayName = decodeHtml(currentTerm?.name || currentSlug || "");
 
         return (
-          <div className="pdp-option-card" key={attribute.name}>
-            <div className="pdp-option-header">
-              <span className="pdp-option-title">{attribute.name}:</span>
-              <strong className="pdp-option-active-name">{currentDisplayName}</strong>
+          <div className="shopify-variant-group" key={attribute.name}>
+            <div className="shopify-variant-header">
+              <span className="shopify-variant-label">{attribute.name}:</span>
+              <strong className="shopify-variant-val">{currentDisplayName}</strong>
             </div>
 
-            <div className={`pdp-swatches-row ${isColor ? "is-color-row" : "is-pill-row"}`}>
+            <div className={`shopify-swatch-list ${isColor ? "is-color" : "is-pill"}`}>
               {terms.map((term) => {
                 const isSelected = selected[attribute.name] === term.slug || selected[attribute.name] === term.name;
                 const swatch = isColor ? getColorSwatch(term.slug || term.name) : null;
@@ -78,7 +78,7 @@ export function ProductPurchasePanel({ product }) {
                   return (
                     <button
                       type="button"
-                      className={`pdp-swatch-circle ${isSelected ? "active" : ""}`}
+                      className={`shopify-swatch-dot ${isSelected ? "is-active" : ""}`}
                       style={{
                         background: swatch.background,
                         borderColor: swatch.border,
@@ -88,7 +88,7 @@ export function ProductPurchasePanel({ product }) {
                       onClick={() => setSelected((current) => ({ ...current, [attribute.name]: term.slug || term.name }))}
                       key={`${attribute.name}-${term.slug || term.name}`}
                     >
-                      {isSelected ? <Check size={14} color={swatch.textColor} strokeWidth={3} /> : null}
+                      {isSelected ? <Check size={13} color={swatch.textColor} strokeWidth={3} /> : null}
                     </button>
                   );
                 }
@@ -96,7 +96,7 @@ export function ProductPurchasePanel({ product }) {
                 return (
                   <button
                     type="button"
-                    className={`pdp-size-pill ${isSelected ? "active" : ""}`}
+                    className={`shopify-size-box ${isSelected ? "is-active" : ""}`}
                     onClick={() => setSelected((current) => ({ ...current, [attribute.name]: term.slug || term.name }))}
                     key={`${attribute.name}-${term.slug || term.name}`}
                   >

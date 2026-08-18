@@ -1520,79 +1520,74 @@ html, body, main {
 }
 
 /* ==========================================================================
-   Product Detail Page (PDP) Swatches & Purchase UI
+   Shopify-Standard Swatches & Variant Selectors (PDP)
    ========================================================================== */
 .pdp-purchase-panel {
-  margin-top: 16px;
+  margin-top: 14px;
 }
 
-.pdp-option-card {
+.shopify-variant-group {
   margin-bottom: 18px;
-  background: #f8fafc;
-  padding: 12px 16px;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
 }
 
-.pdp-option-header {
+.shopify-variant-header {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 10px;
+  font-size: 13px;
 }
 
-.pdp-option-title {
-  font-size: 12px;
-  font-weight: 700;
+.shopify-variant-label {
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.5px;
   color: #475569;
 }
 
-.pdp-option-active-name {
-  font-size: 12px;
+.shopify-variant-val {
   font-weight: 700;
   color: #0f172a;
-  background: #ffffff;
-  padding: 2px 10px;
-  border-radius: 6px;
-  border: 1px solid #cbd5e1;
   text-transform: capitalize;
 }
 
-.pdp-swatches-row {
+.shopify-swatch-list {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
-.pdp-swatch-circle {
-  width: 36px;
-  height: 36px;
+.shopify-swatch-dot {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  min-height: 34px;
   border-radius: 50%;
-  border: 2px solid transparent;
+  border: 1px solid rgba(0, 0, 0, 0.12);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+  transition: transform 140ms ease, box-shadow 140ms ease;
   position: relative;
   outline: none;
+  padding: 0;
 }
 
-.pdp-swatch-circle:hover {
-  transform: scale(1.15);
+.shopify-swatch-dot:hover {
+  transform: scale(1.12);
 }
 
-.pdp-swatch-circle.active {
-  box-shadow: 0 0 0 3px #ffffff, 0 0 0 5.5px #0f172a;
-  transform: scale(1.1);
+.shopify-swatch-dot.is-active {
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #0f172a;
+  transform: scale(1.08);
 }
 
-.pdp-size-pill {
-  padding: 8px 18px;
+.shopify-size-box {
+  padding: 8px 16px;
   font-size: 13px;
   font-weight: 600;
   color: #1e293b;
@@ -1600,19 +1595,20 @@ html, body, main {
   border: 1.5px solid #cbd5e1;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 150ms ease;
+  flex-shrink: 0;
+  transition: all 140ms ease;
 }
 
-.pdp-size-pill:hover {
+.shopify-size-box:hover {
   border-color: #0f172a;
   background: #f8fafc;
 }
 
-.pdp-size-pill.active {
+.shopify-size-box.is-active {
   background: #0f172a;
   color: #ffffff;
   border-color: #0f172a;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
 }
 
 /* ==========================================================================
