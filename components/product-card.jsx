@@ -78,50 +78,55 @@ export function ProductCard({ product }) {
 
         {variationAttributes.map((attribute) => {
           const isColor = isColorAttribute(attribute.taxonomy || attribute.name);
+          const terms = attribute.terms?.filter((term) => term?.name) || [];
+          if (!terms.length) return null;
+
           return (
-            <div className={`card-variants ${isColor ? "color-variants" : "text-variants"}`} key={attribute.name} aria-label={`${attribute.name} options`}>
+            <div className="card-variant-slider-wrapper" key={attribute.name} aria-label={`${attribute.name} options`}>
               <div className="variant-label-small">
                 <span>{attribute.name}:</span>
-                {selected[attribute.name] ? <strong>{selected[attribute.name]}</strong> : null}
+                <strong className="variant-selected-value">
+                  {selected[attribute.name]
+                    ? decodeHtml(terms.find((t) => t.slug === selected[attribute.name] || t.name === selected[attribute.name])?.name || selected[attribute.name])
+                    : `${terms.length} options`}
+                </strong>
               </div>
-              <div className="variant-items">
-                {attribute.terms
-                  ?.filter((term) => term?.name)
-                  .slice(0, 8)
-                  .map((term) => {
-                    const isSelected = selected[attribute.name] === term.slug || selected[attribute.name] === term.name;
-                    const swatch = isColor ? getColorSwatch(term.slug || term.name) : null;
-                    
-                    if (isColor && swatch) {
-                      return (
-                        <button
-                          type="button"
-                          className={`swatch-circle ${isSelected ? "active" : ""}`}
-                          style={{
-                            background: swatch.background,
-                            borderColor: swatch.border,
-                          }}
-                          title={decodeHtml(term.name)}
-                          aria-label={decodeHtml(term.name)}
-                          onClick={() => setSelected((current) => ({ ...current, [attribute.name]: term.slug }))}
-                          key={term.slug || term.name}
-                        >
-                          {isSelected ? <Check size={10} color={swatch.textColor} strokeWidth={3} /> : null}
-                        </button>
-                      );
-                    }
 
+              <div className="card-swatches-slider-track">
+                {terms.map((term) => {
+                  const isSelected = selected[attribute.name] === term.slug || selected[attribute.name] === term.name;
+                  const swatch = isColor ? getColorSwatch(term.slug || term.name) : null;
+
+                  if (isColor && swatch) {
                     return (
                       <button
                         type="button"
-                        className={`size-pill ${isSelected ? "active" : ""}`}
+                        className={`card-swatch-dot ${isSelected ? "selected" : ""}`}
+                        style={{
+                          background: swatch.background,
+                          borderColor: swatch.border,
+                        }}
+                        title={decodeHtml(term.name)}
+                        aria-label={decodeHtml(term.name)}
                         onClick={() => setSelected((current) => ({ ...current, [attribute.name]: term.slug }))}
                         key={term.slug || term.name}
                       >
-                        {decodeHtml(term.name)}
+                        {isSelected ? <Check size={10} color={swatch.textColor} strokeWidth={3} /> : null}
                       </button>
                     );
-                  })}
+                  }
+
+                  return (
+                    <button
+                      type="button"
+                      className={`card-size-pill ${isSelected ? "selected" : ""}`}
+                      onClick={() => setSelected((current) => ({ ...current, [attribute.name]: term.slug }))}
+                      key={term.slug || term.name}
+                    >
+                      {decodeHtml(term.name)}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           );

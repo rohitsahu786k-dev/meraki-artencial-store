@@ -1387,74 +1387,111 @@ html, body, main {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
-  color: #64748b;
+/* Card Swatch Horizontal Slider Row */
+.card-variant-slider-wrapper {
+  margin: 6px 0 4px;
+  max-width: 100%;
 }
 
-.variant-label-small strong {
-  color: #0f172a;
-  font-weight: 600;
-  text-transform: capitalize;
-}
-
-.variant-items {
+.variant-label-small {
   display: flex;
   align-items: center;
   gap: 6px;
-  flex-wrap: wrap;
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 5px;
+  line-height: 1;
 }
 
-/* Visual Color Swatches */
-.swatch-circle {
-  width: 22px;
-  height: 22px;
+.variant-selected-value {
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+.card-swatches-slider-track {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 2px 6px;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.card-swatches-slider-track::-webkit-scrollbar {
+  height: 3px;
+}
+
+.card-swatches-slider-track::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 99px;
+}
+
+/* Card Swatch Circle Dot */
+.card-swatch-dot {
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  border: 2px solid transparent;
+  border: 1.5px solid transparent;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-  transition: all 150ms ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+  flex-shrink: 0;
+  transition: transform 150ms ease, box-shadow 150ms ease;
   position: relative;
+  outline: none;
+  padding: 0;
 }
 
-.swatch-circle:hover {
-  transform: scale(1.18);
+.card-swatch-dot:hover {
+  transform: scale(1.22);
   z-index: 2;
 }
 
-.swatch-circle.active {
+.card-swatch-dot.selected {
   box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #0f172a;
-  transform: scale(1.12);
+  transform: scale(1.15);
 }
 
-/* Size / Qty / Variant Pills */
-.size-pill {
-  padding: 2px 8px;
+/* Card Size Pill */
+.card-size-pill {
+  padding: 3px 8px;
   font-size: 11px;
   font-weight: 600;
   color: #334155;
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
   border-radius: 6px;
   cursor: pointer;
+  flex-shrink: 0;
+  white-space: nowrap;
   transition: all 150ms ease;
 }
 
-.size-pill:hover {
+.card-size-pill:hover {
   background: #e2e8f0;
-  border-color: #cbd5e1;
+  border-color: #94a3b8;
 }
 
-.size-pill.active {
+.card-size-pill.selected {
   background: #0f172a;
   color: #ffffff;
   border-color: #0f172a;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15);
 }
 
 .product-stock-line {
-  margin-top: 6px;
+  margin-top: 4px;
   margin-bottom: 8px;
   font-size: 11px;
 }
