@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Meraki Headless Commerce Bridge
  * Description: Transfers the Next.js bag into WooCommerce before cart or checkout.
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: iPrix Media
  */
 
