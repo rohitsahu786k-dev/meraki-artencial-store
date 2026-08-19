@@ -21,7 +21,7 @@ export async function generateMetadata() {
 export default async function Home({ searchParams }) {
   const query = await searchParams;
   const [products, saleProducts, popularProducts, categories, marqueeNotice] = await Promise.all([
-    getProducts({ per_page: "12", orderby: query?.search ? "relevance" : "date", search: query?.search || "" }),
+    getProducts({ per_page: "12", orderby: "date", search: query?.search || "" }),
     getProducts({ per_page: "8", on_sale: "true" }).catch(() => []),
     getPopularProducts(),
     getCategories(),
@@ -69,12 +69,19 @@ export default async function Home({ searchParams }) {
   };
 
   return (
-    <>
+    <div className="premium-home">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <HeroCarousel banners={banners} />
       <TextMarquee text={marqueeNotice} />
+      <section className="home-confidence-strip">
+        <div className="container home-confidence-grid">
+          <span><Truck size={16} /> Pan India delivery</span>
+          <span><ShieldCheck size={16} /> Secure Nimbbl checkout</span>
+          <span><PackageCheck size={16} /> Live WooCommerce stock</span>
+        </div>
+      </section>
       <CategoryCarousel categories={enrichedCategories} />
-      <section className="section home-category-section">
+      <section className="section home-category-section premium-category-band">
         <div className="container">
           <SectionHeader title="Curated for your creativity" href="/shop" action="Shop all" />
           <div className="top-category-grid">
@@ -89,21 +96,21 @@ export default async function Home({ searchParams }) {
           </div>
         </div>
       </section>
-      <section className="section">
+      <section className="section premium-product-band">
         <div className="container">
           <SectionHeader title="New in" href="/shop" action="Explore all" />
           <ProductCarousel products={(popularProducts.length ? popularProducts : products).slice(0, 8)} />
         </div>
       </section>
       {shelves.map(({ category, products: shelfProducts }) => (
-        <section className="section collection-shelf" key={category.id}>
+        <section className="section collection-shelf premium-product-band" key={category.id}>
           <div className="container">
             <SectionHeader title={decodeHtml(category.name)} href={`/category/${category.slug}`} action="View collection" />
             <ProductCarousel products={shelfProducts} />
           </div>
         </section>
       ))}
-      <section className="section band">
+      <section className="section band home-service-band">
         <div className="container feature-grid">
           <div className="feature">
             <Truck />
@@ -122,7 +129,7 @@ export default async function Home({ searchParams }) {
           </div>
         </div>
       </section>
-      <section className="section">
+      <section className="section premium-product-band limited-offers-band">
         <div className="container">
           <SectionHeader title="Limited-time offers" href="/shop?on_sale=true" action="See deals" />
           <ProductCarousel products={(saleProducts.length ? saleProducts : products).slice(0, 8)} />
@@ -130,7 +137,7 @@ export default async function Home({ searchParams }) {
       </section>
 
       {/* SEO Content Block for Homepage */}
-      <section className="section home-seo-block bg-slate-50 border-t border-slate-200 py-12">
+      <section className="section home-seo-block premium-seo-block bg-slate-50 border-t border-slate-200 py-12">
         <div className="container max-w-5xl">
           <h1 className="text-2xl font-bold text-slate-900 mb-4">Meraki Artencial Store - Best Resin Art & Craft Supplies in India</h1>
           <div className="seo-prose text-sm text-slate-640 space-y-3 leading-relaxed">
@@ -145,7 +152,7 @@ export default async function Home({ searchParams }) {
       </section>
 
       <InstagramFeed posts={instagramPosts} fallbackImages={products.map((product) => product.images?.[0]?.src).filter(Boolean)} />
-    </>
+    </div>
   );
 }
 

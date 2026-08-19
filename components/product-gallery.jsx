@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, Image as ImageIcon, Maximize2, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 function getImgSrc(img) {
   if (!img) return null;
@@ -9,7 +9,12 @@ function getImgSrc(img) {
   return img.src || img.source_url || img.url || img.full || img.medium || null;
 }
 
-export function ProductGallery({ images = [], name = "Product" }) {
+function sameImage(a, b) {
+  if (!a || !b) return false;
+  return Boolean((a.id && b.id && String(a.id) === String(b.id)) || (a.src && b.src && a.src === b.src));
+}
+
+export function ProductGallery({ images = [], name = "Product", productId }) {
   const [active, setActive] = useState(0);
   const [zoomed, setZoomed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -33,10 +38,22 @@ export function ProductGallery({ images = [], name = "Product" }) {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  const move = (delta) => {
+  useEffect(() => {
+    if (!productId) return undefined;
+    const handleVariationImage = (event) => {
+      if (String(event.detail?.productId) !== String(productId)) return;
+      const image = event.detail?.image;
+      const index = validImages.findIndex((candidate) => sameImage(candidate, image));
+      if (index >= 0) setActive(index);
+    };
+    window.addEventListener("meraki:variation-image", handleVariationImage);
+    return () => window.removeEventListener("meraki:variation-image", handleVariationImage);
+  }, [productId, validImages]);
+
+  const move = useCallback((delta) => {
     if (!validImages.length) return;
     setActive((prev) => (prev + delta + validImages.length) % validImages.length);
-  };
+  }, [validImages.length]);
 
   useEffect(() => {
     const handleKeydown = (event) => {
@@ -46,7 +63,7 @@ export function ProductGallery({ images = [], name = "Product" }) {
     };
     window.addEventListener("keydown", handleKeydown);
     return () => window.removeEventListener("keydown", handleKeydown);
-  }, [validImages.length]);
+  }, [move]);
 
   // Touch handlers for swipe
   const handleTouchStart = (e) => {

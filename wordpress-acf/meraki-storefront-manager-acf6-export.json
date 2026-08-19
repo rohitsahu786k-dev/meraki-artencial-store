@@ -1,0 +1,474 @@
+[
+  {
+    "key": "post_type_meraki_banner",
+    "title": "Hero Banners",
+    "menu_order": 0,
+    "active": true,
+    "post_type": "meraki_banner",
+    "advanced_configuration": 1,
+    "import_source": "",
+    "import_date_time": "",
+    "labels": {
+      "name": "Hero Banners",
+      "singular_name": "Hero Banner",
+      "menu_name": "Hero Banners",
+      "all_items": "All Banners",
+      "edit_item": "Edit Hero Banner",
+      "view_item": "View Hero Banner",
+      "view_items": "View Hero Banners",
+      "add_new_item": "Add New Hero Banner",
+      "add_new": "Add New Banner",
+      "new_item": "New Hero Banner",
+      "parent_item_colon": "Parent Hero Banner:",
+      "search_items": "Search Banners",
+      "not_found": "No banners found",
+      "not_found_in_trash": "No banners found in Trash",
+      "archives": "Hero Banner Archives",
+      "attributes": "Hero Banner Attributes",
+      "featured_image": "Fallback Desktop Image",
+      "set_featured_image": "Set fallback desktop image",
+      "remove_featured_image": "Remove fallback desktop image",
+      "use_featured_image": "Use as fallback desktop image",
+      "insert_into_item": "Insert into hero banner",
+      "uploaded_to_this_item": "Uploaded to this hero banner",
+      "filter_items_list": "Filter hero banners list",
+      "filter_by_date": "Filter by date",
+      "items_list_navigation": "Hero banners list navigation",
+      "items_list": "Hero banners list",
+      "item_published": "Hero banner published.",
+      "item_published_privately": "Hero banner published privately.",
+      "item_reverted_to_draft": "Hero banner reverted to draft.",
+      "item_scheduled": "Hero banner scheduled.",
+      "item_updated": "Hero banner updated.",
+      "item_link": "Hero Banner Link",
+      "item_link_description": "A link to a hero banner."
+    },
+    "description": "Homepage desktop and mobile carousel banners for the Meraki headless storefront.",
+    "public": true,
+    "hierarchical": false,
+    "exclude_from_search": true,
+    "publicly_queryable": true,
+    "show_ui": true,
+    "show_in_menu": true,
+    "admin_menu_parent": "",
+    "show_in_admin_bar": true,
+    "show_in_nav_menus": false,
+    "show_in_rest": true,
+    "rest_base": "banners",
+    "rest_namespace": "wp/v2",
+    "rest_controller_class": "WP_REST_Posts_Controller",
+    "menu_position": 20,
+    "menu_icon": "dashicons-images-alt2",
+    "rename_capabilities": false,
+    "singular_capability_name": "post",
+    "plural_capability_name": "posts",
+    "supports": [
+      "title",
+      "thumbnail",
+      "page-attributes"
+    ],
+    "taxonomies": "",
+    "has_archive": false,
+    "has_archive_slug": "",
+    "rewrite": {
+      "permalink_rewrite": "post_type_key",
+      "slug": "banners",
+      "with_front": "1",
+      "feeds": "0",
+      "pages": "1"
+    },
+    "query_var": "post_type_key",
+    "query_var_name": "",
+    "can_export": true,
+    "delete_with_user": false,
+    "register_meta_box_cb": "",
+    "enter_title_here": "Banner title / alt text"
+  },
+  {
+    "key": "group_meraki_banner_details",
+    "title": "Banner Images & Settings",
+    "fields": [
+      {
+        "key": "field_meraki_banner_desktop",
+        "label": "Desktop Banner Image",
+        "name": "desktop_image",
+        "aria-label": "",
+        "type": "image",
+        "instructions": "Recommended: 1920x600px or 1600x500px. This image is used on desktop/tablet hero carousel.",
+        "required": 1,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "return_format": "url",
+        "library": "all",
+        "min_width": 1200,
+        "min_height": 400,
+        "min_size": "",
+        "max_width": "",
+        "max_height": "",
+        "max_size": "",
+        "mime_types": "jpg,jpeg,png,webp",
+        "preview_size": "medium",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_mobile",
+        "label": "Mobile Phone Banner Image",
+        "name": "mobile_image",
+        "aria-label": "",
+        "type": "image",
+        "instructions": "Recommended: 1080x1350px or 800x1000px. If empty, desktop image will be used on mobile.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "return_format": "url",
+        "library": "all",
+        "min_width": 700,
+        "min_height": 700,
+        "min_size": "",
+        "max_width": "",
+        "max_height": "",
+        "max_size": "",
+        "mime_types": "jpg,jpeg,png,webp",
+        "preview_size": "medium",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_link",
+        "label": "Banner Click Link",
+        "name": "link",
+        "aria-label": "",
+        "type": "text",
+        "instructions": "Where clicking the banner should go. Use /shop, /category/bezels, or a full URL.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "/shop",
+        "maxlength": "",
+        "placeholder": "/shop",
+        "prepend": "",
+        "append": "",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_subtitle",
+        "label": "Banner Subtitle / Promotional Tag",
+        "name": "subtitle",
+        "aria-label": "",
+        "type": "text",
+        "instructions": "Optional internal/promo text. Current frontend mainly uses image-only banners.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": "",
+        "placeholder": "e.g. New festive collection live",
+        "prepend": "",
+        "append": "",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_banner_active",
+        "label": "Active / Show on Storefront",
+        "name": "is_active",
+        "aria-label": "",
+        "type": "true_false",
+        "instructions": "Turn off to hide this banner without deleting it.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "message": "",
+        "default_value": 1,
+        "ui_on_text": "Show",
+        "ui_off_text": "Hide",
+        "ui": 1,
+        "show_in_rest": 1
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "post_type",
+          "operator": "==",
+          "value": "meraki_banner"
+        }
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Fields used by the Next.js homepage hero carousel.",
+    "show_in_rest": 1
+  },
+  {
+    "key": "group_meraki_storefront_settings",
+    "title": "Storefront Announcements & Contact Details",
+    "fields": [
+      {
+        "key": "tab_meraki_announcements",
+        "label": "Announcement & Offers",
+        "name": "",
+        "aria-label": "",
+        "type": "tab",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "placement": "top",
+        "endpoint": 0,
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_top_announcement",
+        "label": "Top Announcement Bar Text",
+        "name": "top_announcement",
+        "aria-label": "",
+        "type": "text",
+        "instructions": "Header top announcement bar message.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "MINIMUM ORDER RS. 300 | SECURE NIMBBL CHECKOUT | PAN INDIA DELIVERY",
+        "maxlength": "",
+        "placeholder": "Announcement text",
+        "prepend": "",
+        "append": "",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_announcement_link",
+        "label": "Announcement Click Link",
+        "name": "announcement_link",
+        "aria-label": "",
+        "type": "text",
+        "instructions": "Link used when customers click the top announcement bar.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "/shop",
+        "maxlength": "",
+        "placeholder": "/shop",
+        "prepend": "",
+        "append": "",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_active_coupon",
+        "label": "Featured Offer / Coupon Code",
+        "name": "active_coupon_code",
+        "aria-label": "",
+        "type": "text",
+        "instructions": "Optional coupon code shown beside the announcement.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": "",
+        "placeholder": "MERAKI10",
+        "prepend": "",
+        "append": "",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_marquee_text",
+        "label": "Homepage Scrolling Ribbon Text",
+        "name": "marquee_text",
+        "aria-label": "",
+        "type": "text",
+        "instructions": "Scrolling text ticker below the homepage hero carousel.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "MINIMUM ORDER RS. 300 | FREE SHIPPING ON ORDERS ABOVE RS. 3,000 | 100% AUTHENTIC RESIN ART MATERIALS",
+        "maxlength": "",
+        "placeholder": "Marquee text",
+        "prepend": "",
+        "append": "",
+        "show_in_rest": 1
+      },
+      {
+        "key": "tab_meraki_contact",
+        "label": "WhatsApp & Contact Details",
+        "name": "",
+        "aria-label": "",
+        "type": "tab",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "placement": "top",
+        "endpoint": 0,
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_whatsapp_number",
+        "label": "WhatsApp Number With Country Code",
+        "name": "whatsapp_number",
+        "aria-label": "",
+        "type": "text",
+        "instructions": "Example: 917426915251. Do not add +, spaces, or hyphens.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "917426915251",
+        "maxlength": "",
+        "placeholder": "917426915251",
+        "prepend": "",
+        "append": "",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_whatsapp_message",
+        "label": "WhatsApp Default Greeting Message",
+        "name": "whatsapp_greeting",
+        "aria-label": "",
+        "type": "textarea",
+        "instructions": "Default message customers see when opening WhatsApp chat.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "Hello Meraki Artencial Store! I would like to inquire about your resin art materials and jewellery collection.",
+        "maxlength": "",
+        "rows": 3,
+        "placeholder": "",
+        "new_lines": "",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_support_phone",
+        "label": "Customer Support Phone",
+        "name": "support_phone",
+        "aria-label": "",
+        "type": "text",
+        "instructions": "Phone number shown in store contact areas.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "+91 74269 15251",
+        "maxlength": "",
+        "placeholder": "+91 74269 15251",
+        "prepend": "",
+        "append": "",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_support_email",
+        "label": "Customer Support Email",
+        "name": "support_email",
+        "aria-label": "",
+        "type": "email",
+        "instructions": "Support email shown in store contact areas.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "merakiartstore@gmail.com",
+        "placeholder": "support@example.com",
+        "prepend": "",
+        "append": "",
+        "show_in_rest": 1
+      },
+      {
+        "key": "field_meraki_store_address",
+        "label": "Store Location & Address",
+        "name": "store_address",
+        "aria-label": "",
+        "type": "textarea",
+        "instructions": "Store address shown on contact/footer surfaces.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "Udaipur, Rajasthan, India - 313001",
+        "maxlength": "",
+        "rows": 3,
+        "placeholder": "",
+        "new_lines": "",
+        "show_in_rest": 1
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page_type",
+          "operator": "==",
+          "value": "front_page"
+        }
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Fields used by the Next.js announcement bar, homepage marquee, and contact details.",
+    "show_in_rest": 1
+  }
+]

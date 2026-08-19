@@ -13,13 +13,13 @@ export function AddToCartDrawer({ product, compact = false, quantity: suppliedQu
 
   function buyOne() {
     if (unavailable || needsOptions) return;
-    const item = { product, quantity, variationId: cartMeta.variationId || 0, variationAttributes: cartMeta.attributes || {} };
+    const item = { product: cartMeta.cartProduct || product, quantity, variationId: cartMeta.variationId || 0, variationAttributes: cartMeta.attributes || {} };
     window.location.href = createHandoffUrl([item], "", "checkout");
   }
 
   function addAndOpen() {
     if (unavailable || needsOptions) return;
-    addCartItem(product, quantity, cartMeta);
+    addCartItem(cartMeta.cartProduct || product, quantity, cartMeta);
     openCartDrawer();
   }
 

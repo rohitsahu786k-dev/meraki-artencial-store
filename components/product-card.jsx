@@ -19,22 +19,30 @@ export function ProductCard({ product }) {
   const regularValue = Number(regular || 0);
   const discount = regularValue > priceValue ? Math.round(((regularValue - priceValue) / regularValue) * 100) : 0;
   
-  const image = product.images?.[0];
-  const secondImage = product.images?.[1];
-
   const variationAttributes = product.attributes?.filter((attribute) => attribute.has_variations) || [];
   
   const variation = useMemo(
     () =>
       product.variations?.find((candidate) =>
-        candidate.attributes?.every((attribute) => normalize(selected[attribute.name]) === normalize(attribute.value))
+        candidate.attributes?.every((attribute) => normalize(selected[attribute.name] || selected[attribute.taxonomy]) === normalize(attribute.value || attribute.option))
       ),
     [product.variations, selected]
   );
 
   const cardAttributes = Object.fromEntries(
-    variationAttributes.map((attribute) => [`attribute_${attribute.taxonomy || attribute.name}`, selected[attribute.name]])
+    variationAttributes.map((attribute) => [attributeKey(attribute), selected[attribute.name]])
   );
+  const image = variation?.image?.src ? variation.image : product.images?.[0];
+  const variationPreview = product.variations?.find((candidate) => candidate.image?.src && candidate.image.src !== image?.src)?.image;
+  const secondImage = product.images?.find((candidate) => candidate?.src && candidate.src !== image?.src) || variationPreview;
+  const activeProduct = variation
+    ? {
+        ...product,
+        prices: variation.prices || product.prices,
+        images: variation.image?.src ? [variation.image, ...(product.images || []).filter((candidate) => candidate.id !== variation.image.id)] : product.images,
+        is_in_stock: variation.is_in_stock !== false,
+      }
+    : product;
 
   // Generate consistent pseudo rating if review count is 0 for realistic handmade catalog feel
   const ratingValue = Number(product.average_rating) > 0 ? Number(product.average_rating) : 4.8;
@@ -138,10 +146,10 @@ export function ProductCard({ product }) {
         </div>
 
         <AddToCartDrawer
-          product={product}
+          product={activeProduct}
           compact
-          cartMeta={{ variationId: variation?.id, attributes: cardAttributes }}
-          disabled={product.has_options && !variation}
+          cartMeta={{ variationId: variation?.id, attributes: cardAttributes, cartProduct: activeProduct }}
+          disabled={(product.has_options && !variation) || variation?.is_in_stock === false}
         />
       </div>
     </article>
@@ -150,6 +158,11 @@ export function ProductCard({ product }) {
 
 function normalize(value = "") {
   return String(value).toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+function attributeKey(attribute) {
+  const key = attribute.taxonomy || attribute.slug || attribute.name;
+  return `attribute_${normalize(key).replace(/-/g, "_")}`;
 }
 
 

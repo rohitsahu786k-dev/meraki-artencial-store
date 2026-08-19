@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ShoppingBag, Zap } from "lucide-react";
+import { createHandoffUrl } from "@/lib/cart-store";
 import { decodeHtml, formatPrice } from "@/lib/utils";
 
 export function StickyBuyBar({ product }) {
@@ -25,9 +26,7 @@ export function StickyBuyBar({ product }) {
   const title = decodeHtml(product.name);
   const price = formatPrice(product.prices);
   const imgSrc = product.images?.[0]?.src || product.images?.[0]?.source_url || "/placeholder.jpg";
-  const checkoutUrl = product.permalink
-    ? `${new URL(product.permalink).origin}/checkout/?add-to-cart=${product.id}`
-    : "#";
+  const checkoutUrl = product.has_options ? "#product-options" : createHandoffUrl([{ product, quantity: 1 }], "", "checkout");
 
   return (
     <div className="sticky-buy-bar">
@@ -41,9 +40,17 @@ export function StickyBuyBar({ product }) {
         </div>
 
         <div className="sticky-buy-actions">
-          <a href={checkoutUrl} className="button sticky-buy-btn">
+          <a
+            href={checkoutUrl}
+            className="button sticky-buy-btn"
+            onClick={(event) => {
+              if (!product.has_options) return;
+              event.preventDefault();
+              document.getElementById("product-options")?.scrollIntoView({ behavior: "smooth", block: "center" });
+            }}
+          >
             <Zap size={15} />
-            <span>Buy Now</span>
+            <span>{product.has_options ? "Select Options" : "Buy Now"}</span>
           </a>
         </div>
       </div>

@@ -66,7 +66,6 @@ export function ProductReviews({ product }) {
 
   useEffect(() => {
     if (!productId) return;
-    setLoading(true);
     fetch(`/api/reviews?productId=${productId}`)
       .then((r) => r.json())
       .then((data) => setReviews(data.reviews || []))

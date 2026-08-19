@@ -32,7 +32,12 @@ export default async function ProductPage({ params }) {
     );
 
   const related = await getRelatedProducts(product.id);
-  const images = product.images?.length ? product.images : [];
+  const imageMap = new Map();
+  [...(product.images || []), ...(product.variations || []).map((variation) => variation.image).filter(Boolean)].forEach((image) => {
+    const key = image.id || image.src;
+    if (key && !imageMap.has(key)) imageMap.set(key, image);
+  });
+  const images = [...imageMap.values()];
   const minor = product.prices?.currency_minor_unit ?? 2;
   const priceNum = Number(product.prices?.price || 0) / Math.pow(10, minor);
 
@@ -71,8 +76,8 @@ export default async function ProductPage({ params }) {
         <span>{productTitle}</span>
       </nav>
 
-      <section className="product-detail luxury-pdp-layout">
-        <ProductGallery images={images} name={productTitle} />
+      <section className="product-detail luxury-pdp-layout professional-pdp premium-pdp">
+        <ProductGallery images={images} name={productTitle} productId={product.id} />
         
         <aside className="product-summary">
           <div className="pdp-top-brand-strip">

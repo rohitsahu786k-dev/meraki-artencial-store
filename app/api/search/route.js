@@ -6,7 +6,7 @@ export async function GET(request) {
   if (query.length < 2) return NextResponse.json({ suggestions: [] });
 
   const [products, categories] = await Promise.all([
-    getProducts({ search: query, per_page: "6", orderby: "relevance" }).catch(() => []),
+    getProducts({ search: query, per_page: "6" }).catch(() => []),
     getCategories({ search: query, per_page: "6", hide_empty: "true" }).catch(() => []),
   ]);
 

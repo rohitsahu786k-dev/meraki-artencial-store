@@ -43,8 +43,6 @@ export function HeaderTools({ menu = [], categories = [] }) {
   useEffect(() => {
     const clean = query.trim();
     if (clean.length < 2) {
-      setSuggestions([]);
-      setLoading(false);
       return undefined;
     }
     const controller = new AbortController();
@@ -120,8 +118,8 @@ export function HeaderTools({ menu = [], categories = [] }) {
                     </div>
                   )}
                   <div className="search-results">
-                    {loading ? <p className="search-loading">Searching WooCommerce inventory...</p> : null}
-                    {!loading && suggestions.map((item) => (
+                    {loading && query.trim().length >= 2 ? <p className="search-loading">Searching WooCommerce inventory...</p> : null}
+                    {!loading && query.trim().length >= 2 && suggestions.map((item) => (
                       <Link href={item.href} key={`${item.type}-${item.id}`} onClick={() => setPanel(null)}>
                         <span>
                           <small>{item.type === "product" ? "Product" : "Category"}</small>
