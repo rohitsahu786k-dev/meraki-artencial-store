@@ -2206,6 +2206,179 @@ html, body, main {
   }
 }
 
+/* Cleaner Instagram strip for the restored storefront UI */
+.instagram-reels-section {
+  padding: 44px 0 54px;
+  background: #ffffff;
+  border-top: 1px solid #ece7df;
+  border-bottom: 1px solid #ece7df;
+}
+
+.instagram-section-header {
+  align-items: flex-end;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.insta-brand-info {
+  align-items: center;
+}
+
+.insta-avatar-ring {
+  width: 54px;
+  height: 54px;
+  border-radius: 8px;
+  padding: 0;
+  background: #ffffff;
+  border: 1px solid #e2d9cd;
+  box-shadow: none;
+}
+
+.insta-avatar-img {
+  border-radius: 8px;
+  border: 0;
+}
+
+.insta-handle {
+  font-size: 17px;
+  letter-spacing: 0;
+}
+
+.insta-badge {
+  color: #7a5a16;
+  background: #faf6ed;
+  border-color: #e8d7ad;
+}
+
+.insta-sub {
+  color: #675f55;
+}
+
+.insta-follow-btn {
+  background: #111111 !important;
+  color: #ffffff !important;
+  border: 1px solid #111111 !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+}
+
+.insta-follow-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(17, 17, 17, 0.12) !important;
+}
+
+.insta-arrow-btn {
+  border-radius: 6px;
+  border-color: #ded6cb;
+  box-shadow: none;
+}
+
+.reels-slider-track {
+  gap: 14px;
+  padding: 4px 2px 16px;
+  scroll-snap-type: x mandatory;
+}
+
+.reel-card {
+  flex: 0 0 clamp(178px, 20vw, 238px);
+  height: auto;
+  aspect-ratio: 9 / 14;
+  border-radius: 8px;
+  border: 1px solid #ded6cb;
+  background: #111111;
+  box-shadow: 0 10px 24px rgba(16, 24, 40, 0.08);
+  scroll-snap-align: start;
+}
+
+.reel-card:hover {
+  transform: translateY(-3px);
+  border-color: #bba470;
+  box-shadow: 0 16px 30px rgba(16, 24, 40, 0.14);
+}
+
+.reel-card:hover .reel-poster-img {
+  transform: scale(1.04);
+}
+
+.reel-overlay-gradient {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.05) 42%, rgba(0, 0, 0, 0.78) 100%);
+}
+
+.reel-top-badges {
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  gap: 8px;
+}
+
+.reel-type-pill,
+.reel-tag-pill {
+  border-radius: 5px;
+  background: rgba(17, 17, 17, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reel-play-btn {
+  width: 44px;
+  height: 44px;
+  border-width: 1px;
+}
+
+.reel-card:hover .reel-play-btn {
+  background: rgba(255, 255, 255, 0.26);
+}
+
+.reel-meta-bottom {
+  padding: 12px;
+}
+
+.reel-caption-text {
+  font-size: 11px;
+}
+
+.reel-watch-btn {
+  color: #111111;
+  border-radius: 5px;
+}
+
+@media (max-width: 640px) {
+  .instagram-reels-section {
+    padding: 34px 0 44px;
+  }
+
+  .instagram-section-header {
+    display: grid;
+    align-items: start;
+    gap: 14px;
+  }
+
+  .insta-brand-info {
+    align-items: flex-start;
+  }
+
+  .insta-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .insta-follow-btn {
+    min-height: 40px;
+    padding: 9px 13px !important;
+    font-size: 12px !important;
+  }
+
+  .reel-card {
+    flex-basis: 68vw;
+    max-width: 248px;
+    aspect-ratio: 4 / 5;
+  }
+}
+
 /* Top Strip Coupon Badge */
 .top-strip-link {
   display: inline-flex;

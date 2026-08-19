@@ -76,7 +76,7 @@ export default async function ProductPage({ params }) {
         <span>{productTitle}</span>
       </nav>
 
-      <section className="product-detail luxury-pdp-layout professional-pdp premium-pdp">
+      <section className="product-detail luxury-pdp-layout">
         <ProductGallery images={images} name={productTitle} productId={product.id} />
         
         <aside className="product-summary">

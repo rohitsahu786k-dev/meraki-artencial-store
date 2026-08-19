@@ -7,11 +7,11 @@ export const metadata = {
 
 export default function CheckoutPage() {
   return (
-    <div className="container checkout-page-shell">
-      <div className="page-hero checkout-hero">
+    <div className="container">
+      <div className="page-hero">
         <span className="eyebrow">Checkout</span>
         <h1>Secure checkout</h1>
-        <p className="muted">Review your bag, then continue to WooCommerce for delivery, shipping and Nimbbl payment.</p>
+        <p className="muted">Review your bag, then continue to WooCommerce for delivery and Nimbbl payment.</p>
       </div>
       <CheckoutHandoff />
     </div>

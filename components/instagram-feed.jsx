@@ -74,7 +74,7 @@ const DEFAULT_REELS = [
     id: "reel-6",
     href: "https://www.instagram.com/reel/Ct6TyjJs054/",
     image: "https://merakiartencialstore.com/wp-content/uploads/2024/04/ff49fb0a-b6e6-4280-8d31-aaa278661f5a-300x300.jpeg",
-    caption: "Anti-tarnish Korean bracelets & glow in the dark charms drop 💫",
+    caption: "Anti-tarnish Korean bracelets & glow in the dark charms drop",
     views: "21.6K",
     likes: "2.3K",
     tag: "New Launch",
