@@ -383,7 +383,7 @@ iframe {
     margin-inline: 14px;
   }
 
-  /* Mobile hero is 4:5 and uses the dedicated mobile WordPress image source. */
+  /* Mobile hero is square and uses the dedicated mobile WordPress image source. */
   .hero-banner-only {
     width: 100% !important;
     margin: 0 !important;
@@ -391,7 +391,7 @@ iframe {
   }
 
   .hero-banner-only .hero-slide {
-    aspect-ratio: 4 / 5 !important;
+    aspect-ratio: 1 / 1 !important;
     min-height: 0 !important;
   }
 

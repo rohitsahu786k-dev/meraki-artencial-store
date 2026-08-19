@@ -30,14 +30,20 @@ export async function Header() {
     <header className="site-header">
       <div className="top-strip">
         <div className="container">
-          <Link href={announcement.href || "/shop"} className="top-strip-link">
-            <span>{announcement.text}</span>
-            {announcement.coupon ? (
-              <span className="top-strip-coupon">
-                USE CODE: <strong>{announcement.coupon}</strong>
-              </span>
-            ) : null}
-          </Link>
+          <div className="top-strip-marquee" aria-label="Store announcement">
+            <div className="top-strip-marquee-track">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <Link href={announcement.href || "/shop"} className="top-strip-link" key={index} tabIndex={index === 0 ? 0 : -1}>
+                  <span>{announcement.text}</span>
+                  {announcement.coupon ? (
+                    <span className="top-strip-coupon">
+                      USE CODE: <strong>{announcement.coupon}</strong>
+                    </span>
+                  ) : null}
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
       <div className="container nav-row">
