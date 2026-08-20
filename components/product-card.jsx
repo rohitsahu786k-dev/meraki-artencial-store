@@ -13,12 +13,6 @@ export function ProductCard({ product }) {
   const title = decodeHtml(product.name);
   const categoryName = decodeHtml(product.categories?.[0]?.name || "MERAKI HANDMADE");
 
-  const regular = product.prices?.regular_price !== product.prices?.price ? product.prices?.regular_price : null;
-  const regularPrice = regular ? formatPrice({ ...product.prices, price: regular }) : null;
-  const priceValue = Number(product.prices?.price || 0);
-  const regularValue = Number(regular || 0);
-  const discount = regularValue > priceValue ? Math.round(((regularValue - priceValue) / regularValue) * 100) : 0;
-  
   const variationAttributes = product.attributes?.filter((attribute) => attribute.has_variations) || [];
   
   const variation = useMemo(
@@ -29,9 +23,16 @@ export function ProductCard({ product }) {
     [product.variations, selected]
   );
 
+  const activePrices = variation?.prices || product.prices;
+
   const cardAttributes = Object.fromEntries(
     variationAttributes.map((attribute) => [attributeKey(attribute), selected[attribute.name]])
   );
+  const regular = activePrices?.regular_price !== activePrices?.price ? activePrices?.regular_price : null;
+  const regularPrice = regular ? formatPrice({ ...activePrices, price: regular }) : null;
+  const priceValue = Number(activePrices?.price || 0);
+  const regularValue = Number(regular || 0);
+  const discount = regularValue > priceValue ? Math.round(((regularValue - priceValue) / regularValue) * 100) : 0;
   const image = variation?.image?.src ? variation.image : product.images?.[0];
   const variationPreview = product.variations?.find((candidate) => candidate.image?.src && candidate.image.src !== image?.src)?.image;
   const secondImage = product.images?.find((candidate) => candidate?.src && candidate.src !== image?.src) || variationPreview;
@@ -78,7 +79,7 @@ export function ProductCard({ product }) {
 
         <div className="price-row">
           <div className="price-group">
-            <span className="price">{formatPrice(product.prices)}</span>
+            <span className="price">{formatPrice(activePrices)}</span>
             {regularPrice ? <span className="old-price">{regularPrice}</span> : null}
           </div>
           {discount ? <span className="discount-text">{discount}% off</span> : null}
@@ -139,9 +140,9 @@ export function ProductCard({ product }) {
         })}
 
         <div className="product-stock-line">
-          <span className={product.is_in_stock ? "stock-in" : "stock-out"}>
+          <span className={(variation ? variation.is_in_stock : product.is_in_stock) ? "stock-in" : "stock-out"}>
             <span className="stock-dot" />
-            {product.is_in_stock ? "In stock • Ready to dispatch" : "Out of stock"}
+            {(variation ? variation.is_in_stock : product.is_in_stock) ? "In stock • Ready to dispatch" : "Out of stock"}
           </span>
         </div>
 
