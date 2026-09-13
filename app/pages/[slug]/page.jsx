@@ -1,6 +1,8 @@
 import { getPage } from "@/lib/wp";
 import { decodeHtml, yoastToMetadata } from "@/lib/utils";
 
+export const revalidate = 86400; // 24 Hours Static ISR (Vercel Quota Protection)
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const page = await getPage(slug);

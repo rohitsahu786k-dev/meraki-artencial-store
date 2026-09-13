@@ -1,0 +1,157 @@
+/* ==========================================================================
+   SITE-WIDE CONTAINER & LAYOUT RULES (STRICT RESPONSIVE SPECIFICATION)
+   - Desktop (>=768px): Width 90%, centered (margin-inline: auto), 0 left/right padding, 0 extra margin
+   - Mobile (<768px): Width 100%, 0 left/right margin, exactly 10px left/right padding site-wide
+   ========================================================================== */
+
+/* --- Desktop Layout (min-width: 768px) --- */
+@media (min-width: 768px) {
+  .container,
+  .site-header .container,
+  .site-footer .container,
+  .top-strip .container,
+  .section > .container,
+  .category-section-wrapper .container {
+    width: 90% !important;
+    max-width: 90% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Reset any side margins on main content containers */
+  main,
+  .site-main {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* --- Mobile Layout (max-width: 767px) --- */
+@media (max-width: 767px) {
+  html,
+  body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Complete website containers: 100% width, exactly 10px horizontal padding, 0 side margins */
+  .container,
+  .site-header .container,
+  .site-footer .container,
+  .top-strip .container,
+  .section > .container,
+  .category-section-wrapper .container,
+  .home-seo-block .container,
+  .footer-intro-bar,
+  .footer-grid,
+  .footer-policy-bottom,
+  .footer-seo-copy {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Prevent negative margins or excessive inner padding on mobile */
+  .nav-row {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .top-strip .container {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .section {
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
+  }
+
+  /* Mobile product grid and category horizontal scroller fitting 10px edge bounds */
+  .product-grid,
+  .collection-grid {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* ==========================================================================
+   OFFICIAL INSTAGRAM EMBED SECTION
+   ========================================================================== */
+.instagram-embed-section {
+  width: 100%;
+  padding-top: 36px;
+  padding-bottom: 44px;
+  background: transparent;
+}
+
+.instagram-embed-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.instagram-embed-wrapper blockquote.instagram-media {
+  margin: 0 auto !important;
+  width: 100% !important;
+  max-width: 658px !important;
+  min-width: 326px !important;
+}
+
+@media (max-width: 767px) {
+  .instagram-embed-section {
+    padding-top: 20px;
+    padding-bottom: 28px;
+  }
+
+  .instagram-embed-wrapper blockquote.instagram-media {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* ==========================================================================
+   STICKY FILTER SIDEBAR FOR SHOP & COLLECTION CATALOGS
+   ========================================================================== */
+@media (min-width: 768px) {
+  .archive-layout,
+  .myntra-archive {
+    display: grid !important;
+    grid-template-columns: 260px minmax(0, 1fr) !important;
+    gap: 32px !important;
+    align-items: start !important;
+  }
+
+  .desktop-filter-rail {
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: 96px !important;
+    align-self: start !important;
+    max-height: calc(100vh - 116px) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    scrollbar-width: thin !important;
+    padding-right: 18px !important;
+    border-right: 1px solid #e5e7eb !important;
+  }
+
+  .desktop-filter-rail .filter-panel {
+    position: static !important;
+    width: 100% !important;
+  }
+}

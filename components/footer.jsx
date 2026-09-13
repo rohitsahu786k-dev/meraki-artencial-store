@@ -50,6 +50,7 @@ export function Footer() {
           <div className="footer-column">
             <h4>Customer Care</h4>
             <Link href="/account">My Account / Sign In</Link>
+            <Link href="/track-order">Track Shipment</Link>
             <Link href="/contact">Contact Us</Link>
             <Link href="/blog">Journal & Guides</Link>
             <FooterPolicyLinks />

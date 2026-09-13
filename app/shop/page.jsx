@@ -2,6 +2,8 @@ import { CollectionShell } from "@/components/collection-shell";
 import { getCategories, getProductAttributes, getPaginatedProducts } from "@/lib/wp";
 import { productQueryParams } from "@/lib/product-query";
 
+export const revalidate = 86400; // 24 Hours Static ISR (Vercel Quota Protection)
+
 export const metadata = {
   title: "Shop All Products - Handcrafted & Resin Supplies",
   description: "Browse 1000+ premium resin art supplies, jewellery, bezels, charms, and craft essentials from Meraki Artencial Store.",

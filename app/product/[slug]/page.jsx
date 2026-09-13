@@ -8,6 +8,8 @@ import { StickyBuyBar } from "@/components/sticky-buy-bar";
 import { getProduct, getRelatedProducts, getYoastHead } from "@/lib/wp";
 import { cleanDescriptionHtml, decodeHtml, formatPrice, stripHtml, yoastToMetadata } from "@/lib/utils";
 
+export const revalidate = 86400; // 24 Hours Static ISR (Vercel Quota Protection)
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const product = await getProduct(slug);
@@ -187,5 +189,3 @@ export default async function ProductPage({ params }) {
     </div>
   );
 }
-
-

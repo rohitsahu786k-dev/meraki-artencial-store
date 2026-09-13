@@ -12,6 +12,15 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/manage-wp",
+        destination: `${(process.env.NEXT_PUBLIC_WP_URL || "https://merakiartencialstore.com").replace(/\/$/, "")}/wp-login.php`,
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

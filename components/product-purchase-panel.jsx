@@ -7,6 +7,7 @@ import { WishlistButton } from "@/components/wishlist-button";
 import { CouponOffers } from "@/components/coupon-offers";
 import { createHandoffUrl } from "@/lib/cart-store";
 import { decodeHtml, formatPrice, getColorSwatch, isColorAttribute } from "@/lib/utils";
+import { findSelectedVariation } from "@/lib/variation-selection";
 
 function normalize(value = "") {
   return String(value).toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -17,13 +18,6 @@ const DEFAULT_PRICES = { price: "0", currency_code: "INR", currency_minor_unit: 
 function attributeKey(attribute) {
   const key = attribute.taxonomy || attribute.slug || attribute.name;
   return `attribute_${normalize(key).replace(/-/g, "_")}`;
-}
-
-function variationMatchesSelection(candidate, selected) {
-  return (candidate.attributes || []).every((attribute) => {
-    const selectedValue = selected[attribute.name] || selected[attribute.taxonomy];
-    return normalize(selectedValue) === normalize(attribute.value || attribute.option);
-  });
 }
 
 export function ProductPurchasePanel({ product }) {
@@ -46,8 +40,8 @@ export function ProductPurchasePanel({ product }) {
   
   const variation = useMemo(
     () =>
-      product.variations?.find((candidate) => variationMatchesSelection(candidate, selected)),
-    [product.variations, selected]
+      findSelectedVariation(product, selected),
+    [product, selected]
   );
   const selectedInStock = !product.has_options || variation?.is_in_stock !== false;
 

@@ -4,6 +4,8 @@ import { ArrowLeft, CalendarDays, Clock, Share2, Sparkles, User } from "lucide-r
 import { getFeaturedImage, getPost } from "@/lib/wp";
 import { decodeHtml, stripHtml, yoastToMetadata } from "@/lib/utils";
 
+export const revalidate = 86400; // 24 Hours Static ISR (Vercel Quota Protection)
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const post = await getPost(slug);

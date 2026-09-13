@@ -7,8 +7,10 @@ import { SectionHeader } from "@/components/ui";
 import { InstagramFeed } from "@/components/instagram-feed";
 import { TextMarquee } from "@/components/text-marquee";
 import { getCategories, getFrontPage, getInstagramFeed, getPopularProducts, getProducts, getProductsByCategory, getTopCategoriesFromProducts } from "@/lib/wp";
-import { getManagedHeroBanners, getMarqueeNotice } from "@/lib/wp-storefront";
+import { getManagedHeroBanners, getMarqueeNotice, getHomepageCategorySlugs } from "@/lib/wp-storefront";
 import { decodeHtml, yoastToMetadata } from "@/lib/utils";
+
+export const revalidate = 86400; // 24 Hours Static ISR (Vercel Quota Protection)
 
 export async function generateMetadata() {
   const page = await getFrontPage().catch(() => null);
@@ -18,7 +20,7 @@ export async function generateMetadata() {
   });
 }
 
-export default async function Home({ searchParams }) {
+export default async function HomePage({ searchParams }) {
   const query = await searchParams;
   const [products, saleProducts, popularProducts, categories, marqueeNotice] = await Promise.all([
     getProducts({ per_page: "12", orderby: "date", search: query?.search || "" }),
@@ -27,12 +29,32 @@ export default async function Home({ searchParams }) {
     getCategories(),
     getMarqueeNotice(),
   ]);
-  const [banners, instagramPosts] = await Promise.all([getManagedHeroBanners(products), getInstagramFeed()]);
-  const countLeaders = categories.filter((category) => category.count > 0 && category.slug !== "uncategorized").sort((a, b) => b.count - a.count).slice(0, 12);
-  const topCategories = countLeaders.length ? countLeaders : getTopCategoriesFromProducts(popularProducts.length ? popularProducts : products);
+  const [banners, instagramPosts, customCategorySlugs] = await Promise.all([
+    getManagedHeroBanners(products),
+    getInstagramFeed(),
+    getHomepageCategorySlugs(),
+  ]);
+
+  let topCategories = [];
+  if (Array.isArray(customCategorySlugs) && customCategorySlugs.length > 0) {
+    const catMap = new Map(categories.map((c) => [c.slug.toLowerCase(), c]));
+    customCategorySlugs.forEach((slug) => {
+      const match = catMap.get(slug.toLowerCase().trim());
+      if (match) topCategories.push(match);
+    });
+  }
+
+  if (!topCategories.length) {
+    const countLeaders = categories.filter((category) => category.count > 0 && category.slug !== "uncategorized").sort((a, b) => b.count - a.count).slice(0, 12);
+    topCategories = countLeaders.length ? countLeaders : getTopCategoriesFromProducts(popularProducts.length ? popularProducts : products);
+  }
   const enrichedCategories = await Promise.all(
-    topCategories.map(async (category) => {
-      const categoryProducts = await getProductsByCategory(category.id, { per_page: "8", orderby: "popularity" }).catch(() => []);
+    topCategories.map(async (category, index) => {
+      // Only the first three categories render product shelves. Other tiles
+      // need at most one product as a fallback when no category image exists.
+      const categoryProducts = index < 3 || !category.image
+        ? await getProductsByCategory(category.id, { per_page: index < 3 ? "8" : "1", orderby: "popularity" }).catch(() => [])
+        : [];
       return { ...category, image: category.image || categoryProducts[0]?.images?.[0], products: categoryProducts };
     })
   );
@@ -144,7 +166,7 @@ export default async function Home({ searchParams }) {
         </div>
       </section>
 
-      <InstagramFeed posts={instagramPosts} fallbackImages={products.map((product) => product.images?.[0]?.src).filter(Boolean)} />
+      <InstagramFeed />
     </>
   );
 }

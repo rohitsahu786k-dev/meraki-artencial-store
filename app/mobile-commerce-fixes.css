@@ -217,3 +217,23 @@
     font-size: 8.5px !important;
   }
 }
+
+/* Native Checkout & Tracking Mobile Precision */
+@media (max-width: 900px) {
+  .native-checkout-container {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  .native-checkout-container aside {
+    position: static !important;
+    top: auto !important;
+  }
+}
+
+@media (max-width: 580px) {
+  .native-checkout-container .checkout-main section {
+    padding: 18px 14px !important;
+  }
+}
+

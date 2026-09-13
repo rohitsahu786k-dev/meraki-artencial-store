@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { Check, Star } from "lucide-react";
+import { Star } from "lucide-react";
+import { findSelectedVariation } from "@/lib/variation-selection";
 import { decodeHtml, formatPrice, getColorSwatch, isColorAttribute } from "@/lib/utils";
 import { WpImage } from "@/components/wp-image";
 import { AddToCartDrawer } from "@/components/add-to-cart-drawer";
@@ -17,10 +18,8 @@ export function ProductCard({ product }) {
   
   const variation = useMemo(
     () =>
-      product.variations?.find((candidate) =>
-        candidate.attributes?.every((attribute) => normalize(selected[attribute.name] || selected[attribute.taxonomy]) === normalize(attribute.value || attribute.option))
-      ),
-    [product.variations, selected]
+      findSelectedVariation(product, selected),
+    [product, selected]
   );
 
   const activePrices = variation?.prices || product.prices;
@@ -54,10 +53,10 @@ export function ProductCard({ product }) {
       <div className="product-media-wrapper">
         <Link className="product-media" href={`/product/${product.slug}`}>
           <WpImage className="product-image-primary" src={image?.src || image?.thumbnail} alt={image?.alt || title} />
-          {secondImage?.src ? (
+          {!variation && secondImage?.src ? (
             <WpImage className="product-image-secondary" src={secondImage.src} alt={secondImage.alt || `${title} alternate view`} />
           ) : null}
-          {product.on_sale ? <span className="sale-badge">{discount ? `${discount}% OFF` : "SALE"}</span> : null}
+          {(variation ? discount > 0 : product.on_sale) ? <span className="sale-badge">{discount ? `${discount}% OFF` : "SALE"}</span> : null}
           <span className="quick-view">VIEW DETAILS</span>
         </Link>
         <WishlistButton product={product} />
@@ -117,6 +116,7 @@ export function ProductCard({ product }) {
                         }}
                         title={decodeHtml(term.name)}
                         aria-label={decodeHtml(term.name)}
+                        aria-pressed={isSelected}
                         onClick={() => setSelected((current) => ({ ...current, [attribute.name]: term.slug || term.name }))}
                         key={term.slug || term.name}
                       />
@@ -127,7 +127,8 @@ export function ProductCard({ product }) {
                     <button
                       type="button"
                       className={`card-size-pill ${isSelected ? "selected" : ""}`}
-                      onClick={() => setSelected((current) => ({ ...current, [attribute.name]: term.slug }))}
+                      aria-pressed={isSelected}
+                      onClick={() => setSelected((current) => ({ ...current, [attribute.name]: term.slug || term.name }))}
                       key={term.slug || term.name}
                     >
                       {decodeHtml(term.name)}

@@ -4,6 +4,8 @@ import { getPage } from "@/lib/wp";
 import { extractContactDetails, yoastToMetadata } from "@/lib/utils";
 import { ContactForm } from "@/components/contact-form";
 
+export const revalidate = 86400; // 24 Hours Static ISR (Vercel Quota Protection)
+
 export async function generateMetadata() {
   const page = await getPage("contact-us").catch(() => null);
   return yoastToMetadata(page?.yoast_head_json, {

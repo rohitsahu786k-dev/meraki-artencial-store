@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronDown, ChevronRight, Heart, HelpCircle, LogIn, Menu, MessageCircle, Offer, Package, Search, ShoppingBag, Sparkles, User, X } from "lucide-react";
+import { ChevronDown, ChevronRight, Heart, HelpCircle, LogIn, Menu, MessageCircle, Package, Search, ShoppingBag, Sparkles, Truck, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { decodeHtml } from "@/lib/utils";
 
@@ -136,14 +136,14 @@ export function HeaderTools({ menu = [], categories = [] }) {
               </div>
             ) : (
               <div className="myntra-menu-container">
-                {/* Myntra style User Banner Header */}
+                {/* User Banner Header */}
                 <div className="myntra-user-banner">
                   <div className="user-avatar">
                     <User size={22} />
                   </div>
                   <div className="user-greeting">
-                    <h3>Welcome Guest</h3>
-                    <p>To access orders, wishlist & offers</p>
+                    <h3>Customer Portal</h3>
+                    <p>Orders, live tracking & addresses</p>
                   </div>
                   <Link href="/account" onClick={() => setPanel(null)} className="myntra-login-btn">
                     Sign In / Join <LogIn size={13} />
@@ -206,7 +206,7 @@ export function HeaderTools({ menu = [], categories = [] }) {
 
                   {/* Quick Services & Support */}
                   <div className="myntra-nav-section quick-services">
-                    <span className="myntra-section-title">Quick Links</span>
+                    <span className="myntra-section-title">Customer Service</span>
                     <Link href="/shop?on_sale=true" onClick={() => setPanel(null)} className="quick-service-link highlight">
                       <Sparkles size={16} /> <span>Special Offers & Deals</span>
                     </Link>
@@ -215,6 +215,9 @@ export function HeaderTools({ menu = [], categories = [] }) {
                     </Link>
                     <Link href="/account" onClick={() => setPanel(null)} className="quick-service-link">
                       <Package size={16} /> <span>Orders & Account</span>
+                    </Link>
+                    <Link href="/track-order" onClick={() => setPanel(null)} className="quick-service-link">
+                      <Truck size={16} /> <span>Track Shipment</span>
                     </Link>
                     <a href={whatsappUrl} target="_blank" rel="noreferrer" className="quick-service-link whatsapp">
                       <MessageCircle size={16} /> <span>WhatsApp Support</span>
@@ -237,5 +240,3 @@ export function HeaderTools({ menu = [], categories = [] }) {
     </>
   );
 }
-
-

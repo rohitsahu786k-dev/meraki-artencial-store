@@ -3,6 +3,8 @@ import Image from "next/image";
 import { getFeaturedImage, getPosts } from "@/lib/wp";
 import { decodeHtml, stripHtml } from "@/lib/utils";
 
+export const revalidate = 86400; // 24 Hours Static ISR (Vercel Quota Protection)
+
 export const metadata = {
   title: "Blog",
   description: "Guides and updates from Meraki Artencial Store.",
