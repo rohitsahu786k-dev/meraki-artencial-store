@@ -3,17 +3,23 @@
 import Link from "next/link";
 import { ChevronDown, ChevronRight, Heart, HelpCircle, LogIn, Menu, MessageCircle, Package, Search, ShoppingBag, Sparkles, Truck, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { decodeHtml } from "@/lib/utils";
 
 const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "917426915251";
 
 export function HeaderTools({ menu = [], categories = [] }) {
+  const [mounted, setMounted] = useState(false);
   const [panel, setPanel] = useState(null);
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [openCategory, setOpenCategory] = useState(true);
   const [expandedParents, setExpandedParents] = useState({});
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const openSearch = () => setPanel("search");
@@ -79,7 +85,7 @@ export function HeaderTools({ menu = [], categories = [] }) {
         </button>
       </div>
 
-      {panel ? (
+      {mounted && panel ? createPortal(
         <div className="header-panel-backdrop" onClick={() => setPanel(null)}>
           <aside
             className={`header-panel myntra-sidebar-panel ${panel === "menu" ? "myntra-style-menu" : "search-panel"}`}
@@ -235,7 +241,8 @@ export function HeaderTools({ menu = [], categories = [] }) {
               </div>
             )}
           </aside>
-        </div>
+        </div>,
+        document.body
       ) : null}
     </>
   );
