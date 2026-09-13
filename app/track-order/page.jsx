@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
@@ -17,7 +17,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-export default function TrackOrderPage() {
+function TrackOrderContent() {
   const searchParams = useSearchParams();
   const [orderId, setOrderId] = useState(searchParams.get("orderId") || searchParams.get("order_id") || "");
   const [identifier, setIdentifier] = useState(searchParams.get("email") || searchParams.get("phone") || "");
@@ -383,5 +383,19 @@ export default function TrackOrderPage() {
         </div>
       ) : null}
     </div>
+  );
+}
+
+export default function TrackOrderPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container" style={{ padding: "80px 0", textAlign: "center" }}>
+          <p style={{ color: "#71717a", fontSize: "15px" }}>Loading order tracker...</p>
+        </div>
+      }
+    >
+      <TrackOrderContent />
+    </Suspense>
   );
 }
