@@ -1,11 +1,16 @@
 /* Final responsive contract. Loaded after legacy storefront styles so mobile/desktop behavior is deterministic. */
 
 html,
-body,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip !important;
+}
+
 main {
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden !important;
+  overflow: visible !important;
 }
 
 body {

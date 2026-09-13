@@ -35,7 +35,7 @@
 @media (max-width: 767px) {
   html,
   body {
-    overflow-x: hidden !important;
+    overflow-x: clip !important;
     width: 100% !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
@@ -140,18 +140,25 @@
   .desktop-filter-rail {
     position: -webkit-sticky !important;
     position: sticky !important;
-    top: 96px !important;
+    top: 105px !important;
     align-self: start !important;
-    max-height: calc(100vh - 116px) !important;
+    max-height: calc(100vh - 120px) !important;
     overflow-y: auto !important;
     overscroll-behavior: contain !important;
     scrollbar-width: thin !important;
     padding-right: 18px !important;
     border-right: 1px solid #e5e7eb !important;
+    z-index: 90 !important;
   }
 
-  .desktop-filter-rail .filter-panel {
+  .desktop-filter-rail .filter-panel,
+  .desktop-filter-rail .myntra-filter {
     position: static !important;
     width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
   }
 }
